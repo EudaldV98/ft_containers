@@ -100,6 +100,10 @@ namespace ft
 			{
 				_alloc = alloc;
 				init();
+				_tail = _head;
+				_size = 0;
+				if (first == last)
+					return ;
 				_head->_value = *first++;
 				while (first != last)
 				{
@@ -351,9 +355,7 @@ namespace ft
 
 			void		clear()
 			{
-				for (size_type n = _size; n > 0; n--)
-					pop_back();
-				_size = 0;
+				erase(begin(), end());
 			}
 
 			//OPERATIONS
@@ -365,14 +367,14 @@ namespace ft
 				x.clear();
 			}
 
-			void					splice(iterator position, list& x, iterator i)
+			void		splice(iterator position, list& x, iterator i)
 			{
 				insert(position, *i);
 				x.erase(i);
 			}
 
-			void					splice(iterator position, list& x,
-												iterator first, iterator last)
+			void		splice(iterator position, list& x,
+								iterator first, iterator last)
 			{
 				iterator tmp = first;
 
@@ -403,17 +405,23 @@ namespace ft
 			{
 				iterator it = begin();
 
-				for (size_type n = _size; n > 0; n--)
+				while (it != end())
 				{
 					if (pred(*it))
-						erase (it);
-					it++;
+					{
+						erase(it);
+						it = begin();
+					}
+					else
+						it++;
 				}
+
 			}
 
 			void		unique()
 			{
-				iterator test;
+				iterator test = begin();
+				iterator tmp;
 
 				for (iterator it = begin(); it != end(); it++)
 				{
@@ -421,14 +429,20 @@ namespace ft
 					test++;
 					for ( ; test != end(); test++)
 						if (* test == *it)
+						{
+							tmp = test;
+							tmp++;
 							erase(test);
+							test = it;
+						}
 				}
 			}
 
 			template <class BinaryPredicate>
 			void		unique(BinaryPredicate binary_pred)
 			{
-				iterator test;
+				iterator test = begin();
+				iterator tmp;
 
 				for (iterator it = begin(); it!= end(); it++)
 				{
@@ -436,7 +450,12 @@ namespace ft
 					test++;
 					for ( ; test != end(); test++)
 						if (binary_pred(*it, *test))
+						{
+							tmp = test;
+							tmp++;
 							erase(test);
+							test = it;
+						}
 				}
 			}
 
