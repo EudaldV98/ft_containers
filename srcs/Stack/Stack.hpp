@@ -62,6 +62,11 @@ namespace ft
 			_container.pop_back();
 		}
 
+		size_type			size() const
+		{
+			return	_container.size();
+		}
+
 		template <class T2, class Cntr>
 		friend bool	operator==(const stack<T2, Cntr> &lhs, const stack<T2, Cntr> &rhs);
 		
@@ -78,7 +83,7 @@ namespace ft
 	template <class T, class Container>
 	bool	operator!=(const stack<T, Container> &lhs, const stack<T, Container> &rhs)
 	{
-		return	!(lhs._container == rhs._container);
+		return	!(lhs == rhs);
 	}
 
 	template <class T, class Container>
@@ -90,7 +95,9 @@ namespace ft
 	template <class T, class Container>
 	bool	operator<=(const stack<T, Container> &lhs, const	stack<T, Container> &rhs)
 	{
-		return	lhs._container <= rhs._container;
+		if (lhs == rhs)
+			return	true;
+		return	lhs < rhs;
 	}
 	
 	template <class T, class Container>
