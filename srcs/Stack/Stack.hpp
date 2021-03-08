@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Stack.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvaquer <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/02 14:36:34 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/03/02 14:38:16 by jvaquer          ###   ########.fr       */
+/*   Created: 2021/03/08 10:48:23 by jvaquer           #+#    #+#             */
+/*   Updated: 2021/03/08 10:48:35 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,11 @@ namespace ft
 			return	_container.empty();
 		}
 
+		size_type			size() const
+		{
+			return	_container.size();
+		}
+
 		value_type			&top()
 		{
 			return	_container.back();
@@ -60,11 +65,6 @@ namespace ft
 		void				pop()
 		{
 			_container.pop_back();
-		}
-
-		size_type			size() const
-		{
-			return	_container.size();
 		}
 
 		template <class T2, class Cntr>
@@ -89,6 +89,8 @@ namespace ft
 	template <class T, class Container>
 	bool	operator<(const stack<T, Container> &lhs, const	stack<T, Container> &rhs)
 	{
+		if (lhs == rhs)
+			return	false;
 		return	lhs._container < rhs._container;
 	}
 
@@ -105,7 +107,7 @@ namespace ft
 	{
 		if (lhs == rhs)
 			return	false;
-		return	(!(lhs < rhs));
+		return	!(lhs < rhs);
 	}
 
 	template <class T, class Container>
@@ -113,7 +115,7 @@ namespace ft
 	{
 		if (lhs == rhs)
 			return	true;
-		return	(!(lhs < rhs));
+		return	!(lhs < rhs);
 	}
 }
 
