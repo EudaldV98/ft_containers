@@ -125,7 +125,7 @@ int main ()
 	std::cout << (b != c ? "not equal\n": "equal\n") << std::endl;;
 
 	std::cout << "b is ";
-	std::cout << (b != c ? "not less than c\n": "less than c\n");
+	std::cout << (b <= c ? "less than c\n": "not less than c\n");
 
 	std::cout << std::endl;
 

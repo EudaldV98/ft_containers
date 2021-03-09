@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef QUEUE_HPP
-# define QUEUE_HPP
+#ifndef STACK_HPP
+# define STACK_HPP
 
 # include "../List/List.hpp"
 

@@ -77,11 +77,17 @@ namespace ft
 				_container.pop_front();
 			}
 
+			container_type		ctr()
+			{
+				return	_container;
+			}
+
+
 		template<class T2, class Cntr>
 		friend bool operator==(const queue<T2, Cntr> &lhs, const queue<T2, Cntr> &rhs);
 
 		template<class T2, class Cntr>
-		friend bool operator!=(const queue<T2, Cntr> &lhs, const queue<T2, Cntr> &rhs);
+		friend bool operator<(const queue<T2, Cntr> &lhs, const queue<T2, Cntr> &rhs);
 	};
 
 	template<class T, class Container>
@@ -93,12 +99,14 @@ namespace ft
 	template<class T, class Container>
 	bool operator!=(const queue<T, Container> &lhs, const queue<T, Container> &rhs)
 	{
-		return	!(lhs==rhs);
+		return	!(lhs == rhs);
 	}
 
 	template<class T, class Container>
 	bool operator<(const queue<T, Container> &lhs, const queue<T, Container> &rhs)
 	{
+		if (lhs == rhs)
+			return	false;
 		return	lhs._container < rhs._container;
 	}
 
@@ -115,7 +123,7 @@ namespace ft
 	{
 		if (rhs == lhs)
 			return	false;
-		return	!(lhs < rhs);
+		return	(!(lhs < rhs));
 	}
 
 	template<class T, class Container>
