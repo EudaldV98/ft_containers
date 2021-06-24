@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ReverseBidirectionalIterator.hpp                   :+:      :+:    :+:   */
+/*   reverseBidirectionalIterator.hpp                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 18:12:48 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/02/12 18:47:48 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/06/25 00:11:58 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 namespace ft
 {
 	template <typename T>
-	class ReverseBidirectionalIterator
+	class reverseBidirectionalIterator
 	{
 		public:
 
@@ -41,24 +41,24 @@ namespace ft
 
 			typedef node<T>							value_node;
 			value_node								*_ptr;
-			typedef	ReverseBidirectionalIterator	Bi_iterator;
+			typedef	reverseBidirectionalIterator	Bi_iterator;
 
 		public:
 
-			ReverseBidirectionalIterator (): _ptr(nullptr)
+			reverseBidirectionalIterator (): _ptr(nullptr)
 			{
 			}
 
-			ReverseBidirectionalIterator(value_node *nod): _ptr(nod)
+			reverseBidirectionalIterator(value_node *nod): _ptr(nod)
 			{
 			}
 
-			ReverseBidirectionalIterator(Bi_iterator *other)
+			reverseBidirectionalIterator(Bi_iterator *other)
 			{
 				_ptr = other->_ptr;
 			}
 
-			~ReverseBidirectionalIterator()
+			~reverseBidirectionalIterator()
 			{
 			}
 

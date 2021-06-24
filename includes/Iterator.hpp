@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Iterator.hpp                                       :+:      :+:    :+:   */
+/*   iterator.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/05 09:44:01 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/02/05 11:06:59 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/06/25 01:27:34 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 namespace ft
 {
 	template <typename T>
-	class Iterator
+	class iterator
 	{
 		public:
 
@@ -38,121 +38,117 @@ namespace ft
 		private:
 
 			pointer									_ptr;
-			typedef Iterator						self;
 
 		public:
 
-			Iterator ()
+			iterator ()
 			{
 			}
 
-			Iterator(pointer other): _ptr(other)
+			iterator(pointer other): _ptr(other)
 			{
 			}
 
-			Iterator(Iterator *it)
+			iterator(iterator *it)
 			{
 				_ptr = it->ptr;
 			}
 
-			~Iterator()
+			~iterator()
 			{
 			}
 
-			reference	operator=(self const &it)
+			reference	operator=(iterator const &it)
 			{
 				_ptr = it._ptr;
 				return	*this;
 			}
 
 			//INCREMENTS - DECREMENTS
-			self		operator++()
+			iterator		operator++()
 			{
 				++_ptr;
 				return	*this;
 			}
 
-			self		operator++(int)
+			iterator		operator++(int)
 			{
-				self	it = *this;
 				++_ptr;
-				return	it;
+				return	iterator(_ptr - 1);
 			}
 
-			self		operator+=(size_type nb)
+			iterator		operator+=(size_type nb)
 			{
 				_ptr += nb;
 				return	*this;
 			}
 
-			self		operator--()
+			iterator		operator--()
 			{
 				--_ptr;
 				return	*this;
 			}
 
-			self		operator--(int)
-			{
-				self	it = *this;
-				
+			iterator		operator--(int)
+			{		
 				--_ptr;
-				return	it;
+				return	iterator(_ptr + 1);
 			};
 
-			self		operator-=(size_type nb)
+			iterator		operator-=(size_type nb)
 			{
 				_ptr -= nb;
 				return	*this;
 			}
 
 			//ARITHMETICS
-			self		operator+(difference_type x)
+			iterator		operator+(difference_type x)
 			{
 				return	_ptr + x;
 			}
 
-			self		operator-(difference_type x)
+			iterator		operator-(difference_type x)
 			{
 				return	_ptr - x;
 			}
 
-			self		operator+(self &other)
+			iterator		operator+(iterator &other)
 			{
 				return _ptr - other.ptr;
 			}
 
-			self		operator-(self &other)
+			iterator		operator-(iterator &other)
 			{
 				return 	_ptr - other._ptr;
 			}
 
 			//BINARY OPS
-			bool		operator==(self const &it)
+			bool		operator==(iterator const &it)
 			{
 				return	_ptr == it._ptr;
 			}
 
-			bool		operator!=(self const &it)
+			bool		operator!=(iterator const &it)
 			{
 				return	_ptr != it._ptr;
 			}
 
-			bool		operator>=(self const &it)
+			bool		operator>=(iterator const &it)
 			{
 				return	_ptr >= it._ptr;
 			}
 
-			bool		operator>(self const &it)
+			bool		operator>(iterator const &it)
 			{
 				return	_ptr > it._ptr;
 			}
 
-			bool		operator<=(self const &it)
+			bool		operator<=(iterator const &it)
 			{
 				return	_ptr <= it._ptr;
 			}
 
-			bool		operator<(self const &it)
+			bool		operator<(iterator const &it)
 			{
 				return	_ptr < it._ptr;
 			}

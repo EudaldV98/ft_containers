@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ReverseIterator.hpp                                :+:      :+:    :+:   */
+/*   reverse_iterator.hpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/07 10:50:12 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/02/07 19:45:51 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/06/25 01:16:22 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef REVERSEITERATOR_HPP
-# define REVERSEITERATOR_HPP
+#ifndef REVERSE_ITERATOR_HPP
+# define REVERSE_ITERATOR_HPP
 
 # include <cstdlib>
 # include <cstddef>
@@ -23,7 +23,7 @@
 namespace ft
 {
 	template <typename T>
-	class ReverseIterator
+	class reverse_iterator
 	{
 		public:
 
@@ -38,24 +38,24 @@ namespace ft
 		private:
 
 			pointer					_ptr;
-			typedef	ReverseIterator self;
+			typedef	reverse_iterator self;
 		
 		public:
 
-			ReverseIterator()
+			reverse_iterator()
 			{
 			}
 
-			ReverseIterator(pointer	other): _ptr(other)
+			reverse_iterator(pointer	other): _ptr(other)
 			{
 			}
 
-			ReverseIterator(ReverseIterator *r_it)
+			reverse_iterator(reverse_iterator *r_it)
 			{
 				this->_ptr = r_it->_ptr;
 			}
 
-			~ReverseIterator()
+			~reverse_iterator()
 			{
 			}
 

@@ -6,15 +6,15 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 13:02:44 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/03/09 15:37:06 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/06/24 18:21:44 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef NODE_M_HPP
 # define NODE_M_HPP
 
-#include <iostream>
-#include <cstddef>
+# include <iostream>
+# include <cstddef>
 
 namespace ft
 {

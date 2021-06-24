@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   BidirectionalIterator_m.hpp                        :+:      :+:    :+:   */
+/*   iterator_m.hpp                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 15:41:54 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/03/09 16:46:14 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/06/24 18:19:31 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 namespace ft
 {
 	template <class T>
-	class BidirectionalIterator_m
+	class iterator_m
 	{
 		public:
 
@@ -36,23 +36,23 @@ namespace ft
 
 		private:
 
-			typedef	node_m<T>				node;
-			node							*_ptr;
-			typedef	BidirectionalIterator_m	_self;
+			typedef	node_m<T>	node;
+			node				*_ptr;
+			typedef	iterator_m	_self;
 
 		public:
 
-			BidirectionalIterator_m():
+			iterator_m():
 				_ptr(NULL)
 			{
 			}
 
-			BidirectionalIterator_m(node *n):
+			iterator_m(node *n):
 				_ptr(n)
 			{
 			}
 
-			BidirectionalIterator_m(_self *it):
+			iterator_m(_self *it):
 				_ptr(it->_ptr)
 			{
 			}

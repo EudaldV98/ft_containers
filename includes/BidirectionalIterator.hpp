@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   BidirectionalIterator.hpp                          :+:      :+:    :+:   */
+/*   bidirectionaliterator.hpp                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/11 18:42:00 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/02/27 13:06:31 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/06/25 00:09:51 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 namespace ft
 {
 	template <typename T>
-	class BidirectionalIterator
+	class bidirectionalIterator
 	{
 		public:
 
@@ -41,28 +41,28 @@ namespace ft
 
 			typedef node<T>					value_node;
 			value_node							*_ptr;
-			typedef	BidirectionalIterator	Bi_iterator;
+			typedef	bidirectionalIterator	Bi_iterator;
 
 		public:
 
-			BidirectionalIterator(): _ptr(nullptr)
+			bidirectionalIterator(): _ptr(nullptr)
 			{
 			}
 
-			BidirectionalIterator(value_node *nod): _ptr(nod)
+			bidirectionalIterator(value_node *nod): _ptr(nod)
 			{
 			}
 
-			BidirectionalIterator(Bi_iterator *other)
+			bidirectionalIterator(Bi_iterator *other)
 			{
 				_ptr = other->_ptr;
 			}
 
-			~BidirectionalIterator()
+			~bidirectionalIterator()
 			{
 			}
 
-			BidirectionalIterator	&operator=(Bi_iterator const &it)
+			bidirectionalIterator	&operator=(Bi_iterator const &it)
 			{
 				this->_ptr = it._ptr;
 				return	*this;

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Vector.hpp                                         :+:      :+:    :+:   */
+/*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 12:36:35 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/06/24 18:17:45 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/06/24 14:04:23 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 # include <limits>
 # include <iostream>
 # include <sstream>
-# include "../../includes/iterator.hpp"
-# include "../../includes/reverseIterator.hpp"
+# include "includes/Iterator.hpp"
+# include "includes/ReverseIterator.hpp"
 
 namespace ft
 {
