@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/25 00:14:48 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/06/25 01:23:55 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/06/28 20:53:37 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ namespace ft
 				return _ptr >= it._ptr;
 			}
 
-			bool	operator<=(cosnt_iterator const &it) const
+			bool	operator<=(const_iterator const &it) const
 			{
 				return _ptr <= it._ptr;
 			}
@@ -156,7 +156,7 @@ namespace ft
 			//Deferencing & Address
 			const_reference	operator*() const
 			{
-				return *ptr;
+				return *_ptr;
 			}
 
 			const_reference operator[](diff_type it) const

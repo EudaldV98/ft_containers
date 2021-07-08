@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main_vector.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucas <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/19 17:23:09 by lucas             #+#    #+#             */
-/*   Updated: 2021/06/24 12:47:06 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/06/28 20:52:59 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "srcs/Vector/Vector.hpp"
+#include "srcs/Vector/vector.hpp"
 #include <vector>
 #include <iostream>
 

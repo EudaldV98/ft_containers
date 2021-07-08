@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/25 01:06:32 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/06/25 01:23:17 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/06/28 21:31:30 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,17 @@ namespace ft
 			{				
 			}
 
-			const_reverse_iterator(const_iterator<value_type> const &x)
+			const_reverse_iterator(const T	*src)
+			{
+				_ptr = src;
+			}
+
+			const_reverse_iterator(iterator<T> const &x)
 			{
 				_ptr = x.operator->();
 			}
 			
-			const_reverse_iterator(reverse_iterator<iterator> const &x)
+			const_reverse_iterator(reverse_iterator<T> const &x)
 			{
 				_ptr = x.operator->();
 			}
@@ -94,7 +99,7 @@ namespace ft
 				return _ptr >= it._ptr;
 			}
 
-			bool	operator<=(cosnt_iterator const &it) const
+			bool	operator<=(const_reverse_iterator const &it) const
 			{
 				return _ptr <= it._ptr;
 			}
@@ -159,7 +164,7 @@ namespace ft
 
 			const_reference	operator*() const
 			{
-				return *ptr;
+				return *_ptr;
 			}
 
 			const_reference operator[](diff_type it) const

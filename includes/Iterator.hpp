@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/05 09:44:01 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/06/25 01:27:34 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/07/08 09:50:20 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ namespace ft
 			typedef T								&reference;
 			typedef const T							&const_reference;
 			typedef T								*pointer;
-			typedef ptrdiff_t						difference_type;
+			typedef typename std::ptrdiff_t			difference_type;
 			typedef size_t							size_type;
 
 		private:
@@ -41,26 +41,27 @@ namespace ft
 
 		public:
 
-			iterator ()
+			iterator (void)
 			{
 			}
 
-			iterator(pointer other): _ptr(other)
+			iterator(T *src)
+			{
+				_ptr = src;
+			}
+
+			iterator(iterator const &src)
+			{
+				*this = src;
+			}
+
+			virtual ~iterator()
 			{
 			}
 
-			iterator(iterator *it)
+			iterator	&operator=(iterator const &src)
 			{
-				_ptr = it->ptr;
-			}
-
-			~iterator()
-			{
-			}
-
-			reference	operator=(iterator const &it)
-			{
-				_ptr = it._ptr;
+				_ptr = src.operator->();
 				return	*this;
 			}
 
@@ -104,22 +105,22 @@ namespace ft
 			//ARITHMETICS
 			iterator		operator+(difference_type x)
 			{
-				return	_ptr + x;
+				return	iterator(_ptr + x);
 			}
 
 			iterator		operator-(difference_type x)
 			{
-				return	_ptr - x;
+				return	iterator(_ptr - x);
 			}
 
-			iterator		operator+(iterator &other)
+			iterator		operator+(iterator other)
 			{
-				return _ptr - other.ptr;
+				return	iterator(_ptr - other._ptr);
 			}
 
-			iterator		operator-(iterator &other)
+			iterator		operator-(iterator other)
 			{
-				return 	_ptr - other._ptr;
+				return 	iterator(_ptr - other._ptr);
 			}
 
 			//BINARY OPS
@@ -167,6 +168,11 @@ namespace ft
 			pointer			operator->()
 			{
 				return	_ptr;
+			}
+
+			pointer			operator->() const
+			{
+				return _ptr;
 			}
 
 			reference		operator[](size_type n)

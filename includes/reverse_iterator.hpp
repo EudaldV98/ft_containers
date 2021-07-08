@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/07 10:50:12 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/06/25 01:16:22 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/07/08 09:46:34 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,26 +42,32 @@ namespace ft
 		
 		public:
 
-			reverse_iterator()
+			reverse_iterator(void)
 			{
 			}
 
-			reverse_iterator(pointer	other): _ptr(other)
+			reverse_iterator(T*	src)
+			{
+				_ptr = src;
+			}
+
+			reverse_iterator(reverse_iterator const &src)
+			{
+				*this = src;
+			}
+
+			reverse_iterator(iterator<T> const  &src)
+			{
+				_ptr = src.operator->();
+			}
+
+			virtual ~reverse_iterator()
 			{
 			}
 
-			reverse_iterator(reverse_iterator *r_it)
+			reverse_iterator	&operator=(reverse_iterator const &r_it)
 			{
-				this->_ptr = r_it->_ptr;
-			}
-
-			~reverse_iterator()
-			{
-			}
-
-			reference	operator=(self const &r_it)
-			{
-				_ptr = r_it;
+				_ptr = r_it.operator->();
 				return	*this;
 			}
 
@@ -170,6 +176,11 @@ namespace ft
 			}
 
 			pointer			operator->()
+			{
+				return	_ptr;
+			}
+
+			pointer			operator->() const
 			{
 				return	_ptr;
 			}
