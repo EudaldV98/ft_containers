@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 12:36:35 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/07/08 10:06:13 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/07/09 21:35:09 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,22 +144,22 @@ namespace ft
 
 			reverse_iterator		rbegin()
 			{
-				return	reverse_iterator(_array + _size);
+				return	reverse_iterator(end() - 1);
 			}
 
 			const_reverse_iterator	rbegin() const
 			{
-				return	const_reverse_iterator(_array + _size);
+				return	const_reverse_iterator(end() - 1);
 			}
 
 			reverse_iterator		rend()
 			{
-				return	reverse_iterator(_array);
+				return	reverse_iterator(begin() - 1);
 			}
 
 			const_reverse_iterator	rend() const
 			{
-				return	const_reverse_iterator(_array);
+				return	const_reverse_iterator(begin() - 1);
 			}
 
 			//CAPACITY
@@ -170,12 +170,11 @@ namespace ft
 
 			size_type		max_size(void) const
 			{
-				return (std::numeric_limits<size_type>::max());
+				return (_alloc.max_size());
 			}
 
 			void			resize(size_type n, value_type val = value_type())
 			{
-				std::cout << "val = " << val << std::endl;
 				if (n > _size)
 					for (size_type i = n - _size; i > 0; i--)
 						push_back(val);
@@ -256,12 +255,12 @@ namespace ft
 
 			reference		back()
 			{
-				return	_array[_size];
+				return	_array[_size - 1];
 			}
 
 			const_reference	back() const
 			{
-				return	_array[_size];
+				return	_array[_size - 1];
 			}
 
 			//MODIFIERS
