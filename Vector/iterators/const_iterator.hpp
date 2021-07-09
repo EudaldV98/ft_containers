@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/25 00:14:48 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/06/28 20:53:37 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/07/09 22:10:56 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@ namespace ft
 	class	const_iterator
 	{
 		public:
+
+			static const bool					is_iterator = true;
+
 			typedef const T						value_type;
 			typedef value_type					&reference;
 			typedef const value_type			&const_reference;

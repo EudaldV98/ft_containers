@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/25 01:06:32 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/07/09 21:52:50 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/07/09 22:11:00 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ namespace ft
 	class	const_reverse_iterator
 	{
 		public:
+
+			static const bool					is_iterator = true;
 
 			typedef const T						value_type;
 			typedef value_type					&reference;

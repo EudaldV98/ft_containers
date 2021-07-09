@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/07 10:50:12 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/07/09 21:50:30 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/07/09 22:10:29 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ namespace ft
 	class reverse_iterator
 	{
 		public:
+
+			static const bool						is_iterator = true;
 
 			typedef	std::random_access_iterator_tag	iterator_category;
 			typedef	T								&value_type;

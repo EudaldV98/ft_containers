@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/05 09:44:01 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/07/08 09:50:20 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/07/09 22:10:37 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ namespace ft
 	class iterator
 	{
 		public:
+
+			static const bool						is_iterator = true;
 
 			typedef std::random_access_iterator_tag	iterator_category;
 			typedef T								value_type;
