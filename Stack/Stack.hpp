@@ -6,14 +6,15 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 10:48:23 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/06/24 18:17:59 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/07/12 11:32:20 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STACK_HPP
 # define STACK_HPP
 
-# include "../List/List.hpp"
+# include "../List/list.hpp"
+
 
 namespace ft
 {
