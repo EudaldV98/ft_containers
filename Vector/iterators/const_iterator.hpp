@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/25 00:14:48 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/07/09 22:10:56 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/08/01 13:09:53 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ namespace ft
 
 			const_iterator(pointer ptr)
 			{
-				ptr = _ptr;
+				_ptr = ptr;
 			}
 			
 			const_iterator(iterator<T> const &x)

@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 12:36:35 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/07/09 22:01:10 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/08/01 13:12:29 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ namespace ft
 		public:
 
 			//DEFAULT
-			explicit vector(const Allocator  &alloc = Allocator()):
+			explicit vector(const allocator_type  &alloc = allocator_type()):
 				_alloc(alloc), _array(NULL), _size(0), _size_alloc(0)
 			{
 			}
@@ -71,9 +71,14 @@ namespace ft
 			}
 
 			//COPY
-			vector(const vector &x): _alloc(x._alloc), _array(NULL), _size(0), _size_alloc(0)
+			vector(const vector &x)
 			{
-				*this = x;
+				_array = NULL;
+				_size = 0;
+				_size_alloc = 0;
+				_alloc = allocator_type();
+				for (size_type i = 0; i < x.capacity(); i++)
+					push_back(x[i]);
 			}
 
 			//RANGE
@@ -101,6 +106,14 @@ namespace ft
 			{
 				clear();
 				for (iterator it = x.begin(); it != x.end(); it++)
+					push_back(*it);
+				return *this;
+			}
+
+			vector	&operator=(const vector &x)
+			{
+				clear();
+				for (const_iterator it = x.begin(); it != x.end(); it++)
 					push_back(*it);
 				return *this;
 			}
@@ -379,12 +392,17 @@ namespace ft
 		template <class T, class Alloc>
 		bool	operator==(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs)
 		{
+			typename ft::vector<T>::const_iterator		it_r = rhs.begin();
+			typename ft::vector<T>::const_iterator		it_l = lhs.begin();
+
 			if (lhs.size() != rhs.size())
-				return	false;
-			for (typename ft::vector<T>::iterator l = lhs.begin(), r = rhs.begin(); l != lhs.end(); l++, r++)
-				if (*l != *r)
-					return	false;
-			return	true;
+				return (false);
+			while (it_l != lhs.end() && it_r != rhs.end() && *it_l == *it_r)
+			{
+				it_l++;
+				it_r++;
+			}
+			return (it_l == lhs.end() && it_r == rhs.end());
 		}
 
 		template <class T, class Alloc>
@@ -396,18 +414,37 @@ namespace ft
 		template <class T, class Alloc>
 		bool	operator>(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
 		{
+			typename ft::vector<T>::const_iterator		it_r = rhs.begin();
+			typename ft::vector<T>::const_iterator		it_l = lhs.begin();
+
 			if (lhs == rhs)
-				return	false;
-			for (typename ft::vector<T>::iterator l = lhs.begin(), r = rhs.begin(); l != lhs.end(); l++, r++)
-				if (*l < *r)
-					return	false;
-			return	true;
+				return (false);
+			while (it_l != lhs.end() && it_r != rhs.end() && *it_l == *it_r)
+			{
+				it_l++;
+				it_r++;
+			}
+			if (*it_l > *it_r)
+				return (true);
+			return (false);
 		}
 
 		template <class T, class Alloc>
 		bool	operator<(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
 		{
-			return (rhs > lhs);
+			typename ft::vector<T>::const_iterator		it_r = rhs.begin();
+			typename ft::vector<T>::const_iterator		it_l = lhs.begin();
+
+			if (lhs == rhs)
+				return (false);
+			while (it_l != lhs.end() && it_r != rhs.end() && *it_l == *it_r)
+			{
+				it_l++;
+				it_r++;
+			}
+			if (*it_l < *it_r)
+				return (true);
+			return (false);
 		}
 
 		template <class T, class Alloc>
