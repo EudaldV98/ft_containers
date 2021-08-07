@@ -17,7 +17,7 @@
 # include <memory>
 # include <iostream>
 # include <limits>
-# include "../map.hpp"
+//# include "../map.hpp"
 
 namespace ft
 {
@@ -64,85 +64,106 @@ namespace ft
 				return	*this;
 			}
 
-			//INC/DEC
+			//ARITHMETICS OPERATORS
 			//
-			_self	operator++(int)
+
+			_self	operator++()
 			{
-				if (_ptr->right)
+				if (_map->right)
 				{
-					_ptr = _ptr->right;
-					while (_ptr->left)
-						_ptr = _ptr->left;
+					_map = _map->right;
+					while (_map->left)
+						_map = _map->left;
 				}
 				else
 				{
-					node	*tmp = _ptr;
-					_ptr = _ptr->parent;
-					while (_ptr->parent && tmp == _ptr->right)
+					node_type *child = _map;
+
+					_map = _map->parent;
+					while (_map->right == child)
 					{
-						tmp = _ptr;
-						_ptr = _ptr->parent;
+						child = _map;
+						_map = _map->parent;
+					}
+				}
+				return *this;
+			}
+
+			iterator_m	operator++(int)
+			{
+				iterator_m	tmp = *this;
+
+				++(*this);
+				return	tmp;
+			}
+
+			_self	operator--()
+			{
+				if (_map->left)
+				{
+					_map = _map->left;
+					while (_map->right)
+						_map = _map->right;
+				}
+				else
+				{
+					node_type *childe = _map;
+
+					_map = _map->parent;
+					while (_map && child == _map->left)
+					{
+						child = _map;
+						_map = _map->parent;
 					}
 				}
 				return	*this;
 			}
 
-			_self	operator++()
-			{
-				if (_ptr->right)
-				{
-					_ptr = _ptr->right;
-					while (_ptr->left)
-						_ptr = _ptr->left;
-				}
-				else if (_ptr->parent)
-					_ptr = _ptr->parent;
-				return	*this;
-			}
-
-			_self	operator--()
-			{
-				if (_ptr->left)
-				{
-					_ptr = _ptr->left;
-					while (_ptr->right)
-						_ptr = _ptr->right;
-				}
-				else if (_ptr->parent)
-					_ptr = _ptr->parent;
-				return	*this;
-			}
-
 			_self	operator--(int)
 			{
-				if (_ptr->left)
-				{
-					_ptr = _ptr->left;
-					while (_ptr->right)
-						_ptr = _ptr->right;
-				}
+				iterator_m	tmp = *this;
+
+				--this);
+				return	tmp;
 			}
 
-			//OPERATORS
+			//BOOL OPERATORS
 			//
-			bool	operator==(_self const &it)
+			bool	operator==(iterator_m const &src)
 			{
-				return	_ptr == it._ptr;
+				return	_map == src._map;
 			}
 
-			bool	operator!=(_self const &it) const
+			bool	operator!=(iterator_m const &src) const
 			{
-				return	_ptr != it._ptr;
+				return	_map != src._map;
 			}
 
-			bool	operator->()
+			//DEFERENCING OPERATORS
+			pointer	operator->()
 			{
-				return	&_ptr->_value;
+				return	&_map->_value;
 			}
 
-			bool	operator*()
+			pointer	operator->() const
 			{
-				return	_ptr->_value;
+				return &_map->_value;
+			}
+
+			reference	operator*()
+			{
+				return	_map->_value;
+			}
+
+			const_reference	operator->() const
+			{
+				return	&_map->_value;
+			}
+
+			//GETTER FNCT
+			node_type	*get_map(void) const
+			{
+				return	_map;
 			}
 	};
 }
