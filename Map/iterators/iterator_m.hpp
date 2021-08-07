@@ -17,49 +17,50 @@
 # include <memory>
 # include <iostream>
 # include <limits>
-# include "node_m.hpp"
+# include "../map.hpp"
 
 namespace ft
 {
-	template <class T>
+	template <class T, typename node_type>
 	class iterator_m
 	{
 		public:
 
+			static const bool						is_iterator = true;
 			typedef	std::bidirectional_iterator_tag iterator_category;
 			typedef	T								value_type;
-			typedef	T								&reference;
-			typedef	const	T						&const_reference;
-			typedef	T								*pointer;
-			typedef	ptrdiff_t						difference_type;
-			typedef	size_t							size_type;
+			typedef	value_type						&reference;
+			typedef	const	value_type				&const_reference;
+			typedef	value_type						*pointer;
+			typedef	std::ptrdiff_t					difference_type;
 
 		private:
 
-			typedef	node_m<T>	node;
-			node				*_ptr;
-			typedef	iterator_m	_self;
+			node_type		*_map;
 
 		public:
 
-			iterator_m():
-				_ptr(NULL)
+			iterator_m(): _map(NULL)
 			{
 			}
 
-			iterator_m(node *n):
-				_ptr(n)
+			iterator_m(node *src):
+			{
+				_map = src;
+			}
+
+			iterator_m(const iterator_m &src):
+			{
+				_map = src._map;
+			}
+
+			virtual	~iterator_m()
 			{
 			}
 
-			iterator_m(_self *it):
-				_ptr(it->_ptr)
+			iterator_m	&operator=(iterator_m const &src)
 			{
-			}
-
-			_self	&operator=(_self const &it)
-			{
-				_ptr = it._ptr;
+				_map = src._map;
 				return	*this;
 			}
 
