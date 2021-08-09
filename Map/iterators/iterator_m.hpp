@@ -17,6 +17,7 @@
 # include <memory>
 # include <iostream>
 # include <limits>
+# include "../../utils.hpp"
 //# include "../map.hpp"
 
 namespace ft
@@ -123,7 +124,7 @@ namespace ft
 			{
 				iterator_m	tmp = *this;
 
-				--this);
+				--(*this);
 				return	tmp;
 			}
 
