@@ -13,10 +13,6 @@
 #ifndef BIDIRECTIONAL_ITERATOR_M_HPP
 # define BIDIRECTIONAL_ITERATOR_M_HPP
 
-# include <cstddef>
-# include <memory>
-# include <iostream>
-# include <limits>
 # include "../../utils.hpp"
 //# include "../map.hpp"
 
@@ -68,7 +64,7 @@ namespace ft
 			//ARITHMETICS OPERATORS
 			//
 
-			_self	operator++()
+			iterator	operator++()
 			{
 				if (_map->right)
 				{
@@ -98,7 +94,7 @@ namespace ft
 				return	tmp;
 			}
 
-			_self	operator--()
+			iterator_m	operator--()
 			{
 				if (_map->left)
 				{
@@ -108,7 +104,7 @@ namespace ft
 				}
 				else
 				{
-					node_type *childe = _map;
+					node_type *child = _map;
 
 					_map = _map->parent;
 					while (_map && child == _map->left)
@@ -120,7 +116,7 @@ namespace ft
 				return	*this;
 			}
 
-			_self	operator--(int)
+			iterator_m	operator--(int)
 			{
 				iterator_m	tmp = *this;
 
@@ -141,28 +137,28 @@ namespace ft
 			}
 
 			//DEFERENCING OPERATORS
-			pointer	operator->()
+			pointer			operator->()
 			{
-				return	&_map->_value;
+				return	&_map->value;
 			}
 
-			pointer	operator->() const
+			pointer			operator->() const
 			{
-				return &_map->_value;
+				return &_map->value;
 			}
 
-			reference	operator*()
+			reference		operator*()
 			{
-				return	_map->_value;
+				return	_map->value;
 			}
 
 			const_reference	operator->() const
 			{
-				return	&_map->_value;
+				return	&_map->value;
 			}
 
 			//GETTER FNCT
-			node_type	*get_map(void) const
+			node_type		*get_map(void) const
 			{
 				return	_map;
 			}
