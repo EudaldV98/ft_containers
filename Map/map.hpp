@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/07 19:57:40 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/08 00:24:58 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,51 @@ std::ostream	&operator<<(std::ostream &o, node<Tpair> const &i)
 
 namespace ft
 {
-	
+	template <class T>
+	struct	less
+	{
+		bool	operator()(const T &lhs, const T &rhs) const
+		{
+			return lhs < rhs;
+		}
+	};
+
+	//-------- PAIR CLASS --------
+
+	template <typename Tkey, typename Tval>
+	class	pair
+	{
+		public:
+
+			Tkey	first;
+			Tkey	second;
+
+			pair(void)
+			{
+			}
+
+			template <class X, class Y>
+			pair (const pair<X, Y> &src)
+			{
+				this->first = src.first;
+				this->second = src.second;
+			};
+
+			pair(cosnt Tkey &k, const Tvalue &v): first(a), second(b)
+			{
+			}
+
+			~pair()
+			{
+			}
+
+			pair	&operator=(const pair &src)
+			{
+				this->first = src.first;
+				this->scond = src.second;				
+				return	*this;
+			}
+	};
 }
 
 #endif
