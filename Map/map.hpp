@@ -6,13 +6,14 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/08 00:24:58 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/08 11:42:59 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAP_HPP
 # define MAP_HPP
 
+# include	<limits>
 # include	"../utils.hpp"
 # include	"./iterators/iterator_m.hpp"
 # include	"./iterators/const_iterator_m.hpp"
@@ -76,14 +77,14 @@ node<T>	*far_left(node<T> *node)
 }
 
 template <typename Tpair>
-std::ostream	&operator<<(std::ostream &o, node<Tpair> const &i)
+std::ostream	&operator<<(std::ostream &o, node<Tpair> const &p)
 {
 	std:: cout << \
-	"curr = " << i.get_curr() << std::endl << \
-	"top = " << i.get_top() << std::endl << \
-	"left = " << i.get_left() << std::endl << \
-	"right = " << i.get_right() << std::endl << \
-	"value = " << i.get_pair() << std::endl;
+	"curr = " << p.get_curr() << std::endl << \
+	"top = " << p.get_top() << std::endl << \
+	"left = " << p.get_left() << std::endl << \
+	"right = " << p.get_right() << std::endl << \
+	"value = " << p.get_pair() << std::endl;
 	return	0;
 }
 
@@ -113,10 +114,10 @@ namespace ft
 			}
 
 			template <class X, class Y>
-			pair (const pair<X, Y> &src)
+			pair (const pair<X, Y> &p)
 			{
-				this->first = src.first;
-				this->second = src.second;
+				this->first = p.first;
+				this->second = p.second;
 			};
 
 			pair(cosnt Tkey &k, const Tvalue &v): first(a), second(b)
@@ -127,13 +128,60 @@ namespace ft
 			{
 			}
 
-			pair	&operator=(const pair &src)
+			pair	&operator=(const pair &p)
 			{
-				this->first = src.first;
-				this->scond = src.second;				
+				this->first = p.first;
+				this->scond = p.second;				
 				return	*this;
 			}
 	};
+
+	template <typename Tkey, typename Tvalue>
+	std::ostream	&operator<<(std::ostream &o, pair <Tkey, Tvalue> const &p)
+	{
+		std::cout << "Key = " << p.first << ", Value = " << p.second << " ";
+		return	o;
+	}
+
+	template <class T1, class T2>
+	bool			operator==(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs)
+	{
+		return	lhs.first == rhs.first && lhs.second == rhs.second;
+	}
+
+	template <class T1, class T2>
+	bool			operator!=(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs)
+	{
+		return	!(lhs == rhs);
+	}
+
+	template <class T1, class T2>
+	bool			operator<(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs)
+	{
+		return	lhs.first < rhs.first || (!(lhs.first < rhs.first) && lhs.second < rhs.second);
+	}
+
+	template <class T1, class T2>
+	bool			operator>(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs)
+	{
+		return	rhs < lhs;
+	}
+
+	template <class T1, class T2>
+	bool			operator<=(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs)
+	{
+		return	!(rhs < lhs);
+	}
+
+	template <class T1, class T2>
+	bool			operator>=(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs)
+	{
+		return	!(lhs > rhs);
+	}
+
+	//-------- MAP CLASS --------
+
+	
 }
 
 #endif
