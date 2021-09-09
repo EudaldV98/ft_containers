@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/08 11:42:59 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/09 18:50:10 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ node<T>	*get_parent(node<T> *node)
 }
 
 template <typename T>
-node<T>	*far_right(node<T> *node)
+node<T>	*last_right(node<T> *node)
 {
 	while (node->right)
 		node = node->right;
@@ -69,7 +69,7 @@ node<T>	*far_right(node<T> *node)
 }
 
 template <typename T>
-node<T>	*far_left(node<T> *node)
+node<T>	*last_left(node<T> *node)
 {
 	while (node->left)
 		node = node->left;
@@ -106,9 +106,6 @@ namespace ft
 	{
 		public:
 
-			Tkey	first;
-			Tkey	second;
-
 			pair(void)
 			{
 			}
@@ -134,6 +131,9 @@ namespace ft
 				this->scond = p.second;				
 				return	*this;
 			}
+
+			Tkey	first;
+			Tkey	second;
 	};
 
 	template <typename Tkey, typename Tvalue>
@@ -181,7 +181,92 @@ namespace ft
 
 	//-------- MAP CLASS --------
 
-	
+	template <class Tkey, class Tvalue, class Compare = ft::less<Tkey>, class Alloc = std::allocator<pair<const Tkey, Tvalue> > >
+	class map
+	{
+		public:
+
+			typedef Tkey								key_type;
+			typedef Tvalue								map_value;
+			typedef ft::pair<key_type, map_value>		value_type;
+			typedef node<value_type>					node_type;
+			typedef Compare								key_compare;
+			typedef std::allocator<value_type>			allocator_type;
+			
+			typedef value_type							&reference;
+			typedef const reference						const_reference;
+			typedef value_type							*pointer;
+			typedef const pointer						const_pointer;
+			
+			typedef iterator_m<value_type, node_type>				iterator;
+			typedef const_iterator_m<value_type, node_type>			const_iterator;
+			typedef reverse_iterator_m<value_type, node_type>		reverse_iterator;
+			typedef const_reverse_iterator_m<value_type, node_type>	const_reverse_iterator;
+
+			typedef size_t			size_type;
+			typedef	std::ptrdiff_t	difference_type;
+
+		private:
+
+			node<value_type>	*_map;
+			size_type			_size;
+			allocator_type		_alloc;
+			key_compare			_key_comp;
+
+			void	add_node(node_type	*n)
+			{
+				node_type	**parent = &map;
+				node_type	**node = &map;
+				node_type	*right = last_right(_map);
+				bool		left = -1;
+				
+				while (*node && *node != right)
+				{
+					parent = node;
+					left = _key_comp(n->value.first, (*node)->value.first);
+					if (left)
+						node = &(*node)->left;
+					else
+						node = &(*node)->right;
+				}
+				if (!*node)
+				{
+					n->parent = (*parent);
+					*node = n;
+				}
+				else
+				{
+					*node = n;
+					n->parent = right->parent;
+					right->parent = last_right(n);
+					last_right(n)->rigt = right;
+				}
+				_size++;
+			}
+
+			void	clear_tree(node_type *m)
+			{
+				if (m == NULL)
+					return ;
+				clear_tree(m->left);
+				clear_tree(m->right);
+				delete node;
+			}
+
+			void	copy_tree(map &m)
+			{
+				this->clear();
+				node_type	*tmp = _map;
+
+				_map = m._map;
+				_size = m._size;
+				_alloc = m._alloc;
+				_key_comp = m._key_comp;
+				m._map = tmp;
+				m._size = 0;
+				tmp = NULL;
+			}
+	};
 }
 
 #endif
