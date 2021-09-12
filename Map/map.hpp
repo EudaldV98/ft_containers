@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/09 18:50:10 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/12 23:58:11 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,7 @@ namespace ft
 			node<value_type>	*_map;
 			size_type			_size;
 			allocator_type		_alloc;
-			key_compare			_key_comp;
+			key_compare			_key_cmp;
 
 			void	add_node(node_type	*n)
 			{
@@ -223,7 +223,7 @@ namespace ft
 				while (*node && *node != right)
 				{
 					parent = node;
-					left = _key_comp(n->value.first, (*node)->value.first);
+					left = _key_cmp(n->value.first, (*node)->value.first);
 					if (left)
 						node = &(*node)->left;
 					else
@@ -261,11 +261,70 @@ namespace ft
 				_map = m._map;
 				_size = m._size;
 				_alloc = m._alloc;
-				_key_comp = m._key_comp;
+				_key_cmp = m._key_cmp;
 				m._map = tmp;
 				m._size = 0;
 				tmp = NULL;
 			}
+
+		public:
+
+			//CONSTRUCTORS
+			explicit map(const key_compare &cmp = key_compare(), const allocator_type &alloc = allocator_type())
+			{
+				_map = new node_type();
+				_map->left = NULL;
+				_map->right = NULL;
+				_map->parent = NULL;
+				_size = 0;
+				_alloc = alloc;
+				_key_cmp = cmp;
+			}
+
+			template <class InputIterator>
+			map(InputIterator first, InputIterator last, const key_compare &cmp = key_compare(), const allocator_type &alloc = allocator_type(), 
+				typename ft::enable_if<InputIterator::is_iterator, InputIterator>::type = NULL)
+			{
+				_map = new node_type();
+				_map->left = NULL;
+				_map->right = NULL;
+				_map->parent = NULL;
+				size = 0;
+				_alloc = 0;
+				_key_cmp = cmp;
+				insert(first, last);
+			}
+
+			map &operator=(map const &m)
+			{
+				if (_size > 0)
+					clear();
+				if (m.size() > 0)
+					insert(m.begin(), m.end());
+				return	*this;
+			}
+
+			map(const map &m)
+			{
+				_map = new node_type();
+				_map->left = NULL;
+				_map->right = NULL;
+				_map->parent = NULL;
+				_size = 0;
+				_alloc = allocator_type();
+				_key_cmp = key_compare();
+				*this = m;
+			}
+
+			virtual	~map()
+			{
+				if (empty() == 0)
+					clear();
+			}
+
+			//ITERATORS
+			
+
 	};
 }
 
