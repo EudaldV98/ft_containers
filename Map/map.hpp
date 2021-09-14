@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/12 23:58:11 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/13 23:45:33 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -323,8 +323,20 @@ namespace ft
 			}
 
 			//ITERATORS
-			
+			iterator	begin()
+			{
+				return	iterator(last_left(_map));
+			}
 
+			const_iterator	begin() const
+			{
+				return	const_iterator(last_left(_map));
+			}
+
+			iterator	end()
+			{
+				return	iterator(last_right(_map));
+			}
 	};
 }
 
