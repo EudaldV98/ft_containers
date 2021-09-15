@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/15 01:32:58 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/16 00:21:08 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,7 +270,7 @@ namespace ft
 		public:
 
 			//CONSTRUCTORS
-			explicit map(const key_compare &cmp = key_compare(), const allocator_type &alloc = allocator_type())
+			explicit map(const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type())
 			{
 				_map = new node_type();
 				_map->left = NULL;
@@ -278,11 +278,11 @@ namespace ft
 				_map->parent = NULL;
 				_size = 0;
 				_alloc = alloc;
-				_key_cmp = cmp;
+				_key_cmp = comp;
 			}
 
 			template <class InputIterator>
-			map(InputIterator first, InputIterator last, const key_compare &cmp = key_compare(), const allocator_type &alloc = allocator_type(), 
+			map(InputIterator first, InputIterator last, const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type(), 
 				typename ft::enable_if<InputIterator::is_iterator, InputIterator>::type = NULL)
 			{
 				_map = new node_type();
@@ -291,7 +291,7 @@ namespace ft
 				_map->parent = NULL;
 				size = 0;
 				_alloc = 0;
-				_key_cmp = cmp;
+				_key_cmp = comp;
 				insert(first, last);
 			}
 
@@ -304,7 +304,7 @@ namespace ft
 				return	*this;
 			}
 
-			map(const map &m)
+			map(const map &x)
 			{
 				_map = new node_type();
 				_map->left = NULL;
@@ -313,7 +313,7 @@ namespace ft
 				_size = 0;
 				_alloc = allocator_type();
 				_key_cmp = key_compare();
-				*this = m;
+				*this = x;
 			}
 
 			virtual	~map()
@@ -323,29 +323,71 @@ namespace ft
 			}
 
 			//ITERATORS
-			iterator		begin()
+			iterator				begin()
 			{
 				return	iterator(last_left(_map));
 			}
 
-			const_iterator	begin() const
+			const_iterator			begin() const
 			{
 				return	const_iterator(last_left(_map));
 			}
 
-			iterator		end()
+			iterator				end()
 			{
 				return	iterator(last_right(_map));
 			}
 
-			const_iterator	end() const
+			const_iterator			end() const
 			{
 				return	const_iterator(last_right(_map));
 			}
 
-			reverse_iterator rbegin()
+			reverse_iterator 		rbegin()
 			{
 				return	reverse_iterator(--end());
+			}
+
+			const_reverse_iterator	rbegin() const
+			{
+				return	const_reverse_iterator(rbegin());
+			}
+
+			reverse_iterator		rend()
+			{
+				return	reverse_iterator(begin());
+			}
+
+			const_reverse_iterator	rend() const
+			{
+				return	const_reverse_iterator(begin());
+			}
+
+			//CAPACITY
+			bool		empty() const
+			{
+				if (_size > 0)
+					return	0;
+				return	1;
+			}
+
+			size_type	size() const
+			{
+				return	_size;
+			}
+
+			size_type	max_size() const
+			{
+				return	(std::numeric_limits<difference_type>::max() / (sizeof(node_type) / 2 ? : 1))
+			}
+
+			//ELEMENT ACCESS
+			map_value	&operator[](const key_type &k)
+			{
+				iterator	it = find(k);
+				if (it != end())
+					return	((*it).second);
+				return	(insert(value_type(k, map_value()))).first->second;
 			}
 	};
 }
