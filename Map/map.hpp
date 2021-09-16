@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/16 00:21:08 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/16 03:38:27 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -388,6 +388,20 @@ namespace ft
 				if (it != end())
 					return	((*it).second);
 				return	(insert(value_type(k, map_value()))).first->second;
+			}
+
+			//MODIFIERS
+			pair<iterator, bool>	insert(const value_type &val)
+			{
+				ft::pair<iterator, bool>	ret;
+				value_type					new_pair(val);
+				node_type					*new_node = new node_type();
+
+				if (_size > 0 && count(val.first) == 1)
+				{
+					ret.second = false;
+					return	ret;
+				}
 			}
 	};
 }
