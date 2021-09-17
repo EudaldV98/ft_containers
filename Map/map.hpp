@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/16 03:38:27 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/17 17:20:15 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,9 @@
 # include	"./iterators/reverse_iterator_m.hpp"
 # include	"./iterators/const_reverse_iterator_m.hpp"
 
-# ifndef	__APPLE__
-# 	define	__APPLE__ 0
-# endif
-
 template <typename Tpair>
-struct	node
+struct node
 {
-	private:
-		
-		bool	_unused;
-		#if __APPLE__ == 0
-			int	_unused_for_linux;
-		#endif
-
 	public:
 
 		Tpair	value;
@@ -85,7 +74,7 @@ std::ostream	&operator<<(std::ostream &o, node<Tpair> const &p)
 	"left = " << p.get_left() << std::endl << \
 	"right = " << p.get_right() << std::endl << \
 	"value = " << p.get_pair() << std::endl;
-	return	0;
+	return	o;
 }
 
 namespace ft
@@ -117,7 +106,7 @@ namespace ft
 				this->second = p.second;
 			};
 
-			pair(cosnt Tkey &k, const Tvalue &v): first(a), second(b)
+			pair(const Tkey &k, const Tval &v): first(k), second(v)
 			{
 			}
 
@@ -128,7 +117,7 @@ namespace ft
 			pair	&operator=(const pair &p)
 			{
 				this->first = p.first;
-				this->scond = p.second;				
+				this->second = p.second;				
 				return	*this;
 			}
 
@@ -194,7 +183,7 @@ namespace ft
 			typedef std::allocator<value_type>			allocator_type;
 			
 			typedef value_type							&reference;
-			typedef const reference						const_reference;
+			typedef reference						const_reference;
 			typedef value_type							*pointer;
 			typedef const pointer						const_pointer;
 			
@@ -215,8 +204,8 @@ namespace ft
 
 			void	add_node(node_type	*n)
 			{
-				node_type	**parent = &map;
-				node_type	**node = &map;
+				node_type	**parent = &_map;
+				node_type	**node = &_map;
 				node_type	*right = last_right(_map);
 				bool		left = -1;
 				
@@ -229,7 +218,7 @@ namespace ft
 					else
 						node = &(*node)->right;
 				}
-				if (!*node)
+				if (*node == NULL)
 				{
 					n->parent = (*parent);
 					*node = n;
@@ -239,7 +228,7 @@ namespace ft
 					*node = n;
 					n->parent = right->parent;
 					right->parent = last_right(n);
-					last_right(n)->rigt = right;
+					last_right(n)->right = right;
 				}
 				_size++;
 			}
@@ -250,7 +239,7 @@ namespace ft
 					return ;
 				clear_tree(m->left);
 				clear_tree(m->right);
-				delete node;
+				delete m;
 			}
 
 			void	copy_tree(map &m)
@@ -289,7 +278,7 @@ namespace ft
 				_map->left = NULL;
 				_map->right = NULL;
 				_map->parent = NULL;
-				size = 0;
+				_size = 0;
 				_alloc = 0;
 				_key_cmp = comp;
 				insert(first, last);
@@ -378,7 +367,7 @@ namespace ft
 
 			size_type	max_size() const
 			{
-				return	(std::numeric_limits<difference_type>::max() / (sizeof(node_type) / 2 ? : 1))
+				return	(std::numeric_limits<difference_type>::max() / (sizeof(node_type) / 2 ? : 1));
 			}
 
 			//ELEMENT ACCESS
@@ -402,6 +391,15 @@ namespace ft
 					ret.second = false;
 					return	ret;
 				}
+
+				new_node->value = new_pair;
+				new_node->left = NULL;
+				new_node->right = NULL;
+				new_node->parent = NULL;
+
+				add_node(new_node);
+				ret.first = find(val.first);
+				return	ret;
 			}
 	};
 }

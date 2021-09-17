@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/09 12:25:14 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/07 19:09:59 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/17 12:23:45 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ namespace ft
 				_map = src._map;
 			}
 
-			const_iterator_m(const const_iterator_m<T, node_type> &src)
+			const_iterator_m(const iterator_m<T, node_type> &src)
 			{
 				_map = src.get_map();
 			}

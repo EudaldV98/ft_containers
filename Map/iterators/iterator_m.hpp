@@ -37,16 +37,16 @@ namespace ft
 
 		public:
 
-			iterator_m(): _map(NULL)
+			iterator_m(void): _map(NULL)
 			{
 			}
 
-			iterator_m(node *src):
+			iterator_m(node_type *src)
 			{
 				_map = src;
 			}
 
-			iterator_m(const iterator_m &src):
+			iterator_m(const iterator_m &src)
 			{
 				_map = src._map;
 			}
@@ -64,7 +64,7 @@ namespace ft
 			//ARITHMETICS OPERATORS
 			//
 
-			iterator	operator++()
+			iterator_m	operator++()
 			{
 				if (_map->right)
 				{
@@ -152,9 +152,9 @@ namespace ft
 				return	_map->value;
 			}
 
-			const_reference	operator->() const
+			const_reference	operator*() const
 			{
-				return	&_map->value;
+				return	_map->value;
 			}
 
 			//GETTER FNCT

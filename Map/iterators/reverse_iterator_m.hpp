@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 10:54:58 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/07 19:11:47 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/17 12:26:11 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ namespace ft
 			//OPERATOR BOOL
 			bool	operator==(reverse_iterator_m const &src) const
 			{
-				return	_map == src._map
+				return	_map == src._map;
 			}
 
 			bool	operator!=(reverse_iterator_m const &src) const
@@ -88,12 +88,12 @@ namespace ft
 				}
 				else
 				{
-					node_type	*chhild = _map;
+					node_type	*ptr = _map;
 
 					_map = _map->parent;
-					while (_map && _child == _map->left)
+					while (_map && ptr == _map->left)
 					{
-						chhild = _map;
+						ptr = _map;
 						_map = _map->parent;
 					}
 					return	*this;
