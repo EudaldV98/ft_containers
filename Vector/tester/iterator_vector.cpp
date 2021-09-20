@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/08 09:22:55 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/07/08 09:22:57 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/20 18:36:26 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,15 +192,11 @@ void		iterator_booleans()
 
 	std::cout << "it_beg <= it_end is " << std::boolalpha << (it_beg <= it_end) << std::endl;
 	std::cout << "it_end <= it_beg is " << std::boolalpha << (it_end <= it_beg) << std::endl;
-	std::cout << "it_end <= it_end is " << std::boolalpha << (it_end <= it_end) << std::endl;
 	std::cout << "it_beg >= it_end is " << std::boolalpha << (it_beg >= it_end) << std::endl;
 	std::cout << "it_end >= it_beg is " << std::boolalpha << (it_end >= it_beg) << std::endl;
-	std::cout << "it_end >= it_end is " << std::boolalpha << (it_end >= it_end) << std::endl << std::endl;
 
 	std::cout << "it_beg == it_end is " << std::boolalpha << (it_beg == it_end) << std::endl;
-	std::cout << "it_beg == it_beg is " << std::boolalpha << (it_beg == it_beg) << std::endl;
 	std::cout << "it_beg != it_end is " << std::boolalpha << (it_beg != it_end) << std::endl;
-	std::cout << "it_beg != it_beg is " << std::boolalpha << (it_beg != it_beg) << std::endl << std::endl;
 
 	// STD_VECTOR
 	std::vector<int>			vec1;
@@ -222,15 +218,11 @@ void		iterator_booleans()
 
 	std::cout << "it_beg <= it_end is " << std::boolalpha << (ite_beg <= ite_end) << std::endl;
 	std::cout << "it_end <= it_beg is " << std::boolalpha << (ite_end <= ite_beg) << std::endl;
-	std::cout << "it_end <= it_end is " << std::boolalpha << (ite_end <= ite_end) << std::endl;
 	std::cout << "it_beg >= it_end is " << std::boolalpha << (ite_beg >= ite_end) << std::endl;
 	std::cout << "it_end >= it_beg is " << std::boolalpha << (ite_end >= ite_beg) << std::endl;
-	std::cout << "it_end >= it_end is " << std::boolalpha << (ite_end >= ite_end) << std::endl << std::endl;
 
 	std::cout << "it_beg == it_end is " << std::boolalpha << (ite_beg == ite_end) << std::endl;
-	std::cout << "it_beg == it_beg is " << std::boolalpha << (ite_beg == ite_beg) << std::endl;
 	std::cout << "it_beg != it_end is " << std::boolalpha << (ite_beg != ite_end) << std::endl;
-	std::cout << "it_beg != it_beg is " << std::boolalpha << (ite_beg != ite_beg) << std::endl << std::endl;
 	next_test();
 }
 

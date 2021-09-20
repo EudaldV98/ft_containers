@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/17 17:20:15 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/20 13:15:54 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include	"./iterators/const_iterator_m.hpp"
 # include	"./iterators/reverse_iterator_m.hpp"
 # include	"./iterators/const_reverse_iterator_m.hpp"
+
 
 template <typename Tpair>
 struct node
@@ -205,27 +206,27 @@ namespace ft
 			void	add_node(node_type	*n)
 			{
 				node_type	**parent = &_map;
-				node_type	**node = &_map;
+				node_type	**ptr = &_map;
 				node_type	*right = last_right(_map);
 				bool		left = -1;
 				
-				while (*node && *node != right)
+				while (*ptr && *ptr != right)
 				{
-					parent = node;
-					left = _key_cmp(n->value.first, (*node)->value.first);
+					parent = ptr;
+					left = _key_cmp(n->value.first, (*ptr)->value.first);
 					if (left)
-						node = &(*node)->left;
+						ptr = &(*ptr)->left;
 					else
-						node = &(*node)->right;
+						ptr = &(*node)->right;
 				}
-				if (*node == NULL)
+				if (*ptr == NULL)
 				{
 					n->parent = (*parent);
-					*node = n;
+					*ptr = n;
 				}
 				else
 				{
-					*node = n;
+					*ptr = n;
 					n->parent = right->parent;
 					right->parent = last_right(n);
 					last_right(n)->right = right;
@@ -380,6 +381,7 @@ namespace ft
 			}
 
 			//MODIFIERS
+			
 			pair<iterator, bool>	insert(const value_type &val)
 			{
 				ft::pair<iterator, bool>	ret;
@@ -401,6 +403,92 @@ namespace ft
 				ret.first = find(val.first);
 				return	ret;
 			}
+
+			iterator				insert(iterator position, const value_type &val)
+			{
+				(void)position;
+				return	insert(val).first;
+			}
+
+			template <class InputIterator>
+			void					insert(InputIterator first, InputIterator last, typename ft::enable_if<InputIterator::is_iterator, InputIterator>::type = NULL)
+			{
+				while (first != last)
+				{
+					insert(*first);
+					first++;
+				}
+			}
+
+			//erase
+			void		erase(iterator position)
+			{
+				erase((*position).first);
+			}
+
+			size_type	erase(const key_type &k)
+			{
+				iterator	it = find(k);
+				node_type	**to_del = it.get_map();
+				node_type	**parent = &to_del->parent;
+				node_type	*child;
+				node_type	*tmp;
+
+				if (!to_del->left && !to_del->right == NULL)
+				{
+					if ((*parent)->left == to_del)
+						(*parent)->left = NULL;
+					if ((*parent)->right == to_del)
+						(*parent)->right = NULL;
+					delete	to_del;
+				}
+
+				else if (!to_del->left || !to_del->right)
+				{
+					if (to_del->left)
+						child = to_del->left;
+					else
+						child = to_del->right;
+					child->parent = *parent;
+					if (to_del->parent)
+					{
+						if ((*parent)->left == to_del)
+							(*parent)->left = child;
+						else
+							(*parent)->right = child;
+					}
+					else
+						_map = child;
+					delete	to_del;
+				}
+
+				else
+				{
+					if (!to_del->parent)
+					{
+						tmp = to_del->left;
+						while (tmp->right)
+							tmp = tmp->right;
+						if (tmp == todel->left)
+						{
+							tmp->parent = to_del->parent;
+							tmp->right = to_del->right;
+							todel->right->parent = tmp;
+							if (to_del->parent)
+							{
+								if ((*parent)->left == to_del)
+									(*parent)->left = tmp;
+								else
+									(*parent)->left = tmp;
+							}
+							else
+								_map = tmp;
+						}
+					}
+				}
+			}
+
+			
 	};
 }
 

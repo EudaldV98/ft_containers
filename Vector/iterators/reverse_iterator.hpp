@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/07 10:50:12 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/07/09 22:10:29 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/20 18:34:13 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,23 @@
 # include <sstream>
 # include <iostream>
 
+# include "../../iterator_traits.hpp"
+
 namespace ft
 {
-	template <typename T>
-	class reverse_iterator
+	template <class Iterator>
+	struct reverse_iterator
 	{
 		public:
 
 			static const bool						is_iterator = true;
 
-			typedef	std::random_access_iterator_tag	iterator_category;
-			typedef	T								&value_type;
-			typedef	T								&reference;
-			typedef const T							&const_reference;
-			typedef	T								*pointer;
-			typedef ptrdiff_t						difference_type;
+			typedef Iterator iterator_type;
+			typedef	typename traits::iterator_traits<Iterator>::iterator_category	iterator_category;
+			typedef	typename traits::iterator_traits<Iterator>::value_type			value_type;
+			typedef	typename traits::iterator_traits<Iterator>::reference			reference;
+			typedef	typename traits::iterator_traits<Iterator>::pointer				pointer;
+			typedef typename traits::iterator_traits<Iterator>::difference_type		difference_type;
 			typedef	size_t							size_type;
 
 		private:
@@ -46,19 +48,16 @@ namespace ft
 
 			reverse_iterator(void)
 			{
+				_ptr = NULL;
 			}
 
-			reverse_iterator(T*	src)
+			explicit reverse_iterator(iterator_type src)
 			{
 				_ptr = src;
 			}
 
-			reverse_iterator(reverse_iterator const &src)
-			{
-				*this = src;
-			}
-
-			reverse_iterator(iterator<T> const  &src)
+			template <class Iter>
+			reverse_iterator(const reverse_iterator<Iter>  &src)
 			{
 				_ptr = src.operator->();
 			}
@@ -71,6 +70,11 @@ namespace ft
 			{
 				_ptr = r_it.operator->();
 				return	*this;
+			}
+
+			iterator_type		base() const
+			{
+				return	_ptr;
 			}
 
 			//INCREMENTS
@@ -117,22 +121,14 @@ namespace ft
 			//ARITHMETICS
 			self		operator+(difference_type n)
 			{
-				return	_ptr - n;
+				reverse_iterator it(_ptr - n);
+				return it;
 			}
 
 			self		operator-(difference_type n)
 			{
-				return	_ptr + n;
-			}
-
-			self		operator+(self &r_it)
-			{
-				return	_ptr - r_it._ptr;
-			}
-
-			self		operator-(self	&r_it)
-			{
-				return	_ptr + r_it._ptr;
+				reverse_iterator it(_ptr + n);
+				return it;
 			}
 
 			//BOOLEANS
@@ -172,7 +168,7 @@ namespace ft
 				return	*_ptr;
 			}
 
-			const_reference	operator*() const
+			reference	operator*() const
 			{
 				return	*_ptr;
 			}
@@ -192,10 +188,52 @@ namespace ft
 				return	*(_ptr + n);
 			}
 
-			const_reference	operator[](size_type n) const
+			reference		operator[](size_type n) const
 			{
 				return	*(_ptr + n);
 			}
+	};
+
+	template <class Iterator>
+	bool operator== (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+	{
+		if (lhs.base() == rhs.base())
+			return true;
+		return false;
+	};
+
+	template <class Iterator>
+	bool operator!= (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+	{
+		return !(lhs == rhs);
+	};
+
+	template <class Iterator>
+	bool operator<  (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+	{
+		if (lhs.base() > rhs.base())
+			return true;
+		return false;
+	};
+
+	template <class Iterator>
+	bool operator<= (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+	{
+		if (lhs < rhs || lhs == rhs)
+			return true;
+		return false;
+	};
+
+	template <class Iterator>
+	bool operator>  (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+	{
+		return (rhs < lhs);
+	};
+
+	template <class Iterator>
+	bool operator>= (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+	{
+		return (rhs <= lhs);
 	};
 }
 
