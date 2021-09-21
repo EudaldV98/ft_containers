@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 12:36:35 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/20 18:44:48 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/21 12:48:18 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -410,7 +410,7 @@ namespace ft
 		template <class T, class Alloc>
 		bool operator< (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 		{
-			typename vector<T, Alloc>::iterator it1 = lhs.begin();
+			typename vector<T, Alloc>::iterator it1 = lhs.begin(); 
 			typename vector<T, Alloc>::iterator ite1 = lhs.end();
 
 			typename vector<T, Alloc>::iterator it2 = rhs.begin();
@@ -428,6 +428,12 @@ namespace ft
 			if (it2 != ite2)
 				return true;
 			return false;
+		};
+
+		template <class T, class Alloc>
+		bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+		{
+			return (lhs < rhs || lhs == rhs);
 		};
 
 		template <class T, class Alloc>
