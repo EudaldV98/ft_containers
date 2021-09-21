@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/20 13:15:54 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/21 18:04:34 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,7 +217,7 @@ namespace ft
 					if (left)
 						ptr = &(*ptr)->left;
 					else
-						ptr = &(*node)->right;
+						ptr = &(*ptr)->right;
 				}
 				if (*ptr == NULL)
 				{
@@ -271,16 +271,15 @@ namespace ft
 				_key_cmp = comp;
 			}
 
-			template <class InputIterator>
-			map(InputIterator first, InputIterator last, const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type(), 
-				typename ft::enable_if<InputIterator::is_iterator, InputIterator>::type = NULL)
+			template <class InputIt>
+			map(InputIt first, typename ft::enable_if<InputIt::is_iterator, InputIt>::type last, const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type())
 			{
 				_map = new node_type();
 				_map->left = NULL;
 				_map->right = NULL;
 				_map->parent = NULL;
 				_size = 0;
-				_alloc = 0;
+				_alloc = alloc;
 				_key_cmp = comp;
 				insert(first, last);
 			}
@@ -442,7 +441,6 @@ namespace ft
 						(*parent)->right = NULL;
 					delete	to_del;
 				}
-
 				else if (!to_del->left || !to_del->right)
 				{
 					if (to_del->left)
@@ -461,7 +459,6 @@ namespace ft
 						_map = child;
 					delete	to_del;
 				}
-
 				else
 				{
 					if (!to_del->parent)
@@ -469,11 +466,11 @@ namespace ft
 						tmp = to_del->left;
 						while (tmp->right)
 							tmp = tmp->right;
-						if (tmp == todel->left)
+						if (tmp == to_del->left)
 						{
 							tmp->parent = to_del->parent;
 							tmp->right = to_del->right;
-							todel->right->parent = tmp;
+							to_del->right->parent = tmp;
 							if (to_del->parent)
 							{
 								if ((*parent)->left == to_del)
@@ -484,11 +481,248 @@ namespace ft
 							else
 								_map = tmp;
 						}
+						else
+						{
+							tmp->parent->right = NULL;
+							tmp->parent = to_del->parent;
+							tmp->left = to_del->left;
+							tmp->right = to_del->right;
+							to_del->right->parent = tmp;
+							to_del->left->parent = tmp;
+							if (to_del->parent != NULL)
+							{
+								if ((*parent)->left == to_del)
+									(*parent)->left = tmp;
+								else
+									(*parent)->right = tmp;	
+							}
+							else
+								_map = tmp;
+						}
 					}
+					else
+					{
+						tmp = to_del->right;
+						while (tmp->left)
+							tmp = tmp->left;
+						if (tmp == to_del->right)
+						{
+							tmp->parent = to_del->parent;
+							tmp->left = to_del->left;
+							to_del->left->parent = tmp;
+							if (to_del->parent)
+							{
+								if ((*parent)->left == to_del)
+									(*parent)->left = tmp;
+								else
+									(*parent)->right = tmp;
+							}
+							else
+								_map = tmp;
+						}
+						else
+						{
+							tmp->parent->left = tmp->right;
+							tmp->right->parent = tmp->parent;
+							tmp->right = to_del->right;
+							tmp->right->parent = tmp;
+							tmp->parent = to_del->parent;
+							tmp->left = to_del->left;
+							tmp->left->parent = tmp;
+							if (to_del->parent)
+							{
+								if ((*parent)->left == to_del)
+									(*parent)->left = tmp;
+								else
+									(*parent)->right = tmp;
+							}
+							else
+								_map = tmp;
+						}
+					}
+					delete to_del;
 				}
+				_size--;
+				return 1;
 			}
 
-			
+			void erase (iterator first, iterator last)
+			{
+				while (first != last)
+					erase(first++);
+			}
+
+			void swap(map &x)
+			{
+				map tmp;
+
+				tmp.copy_tree(x);
+				x.copy_tree(*this);
+				this->copy_tree(tmp);
+			}
+
+			void clear()
+			{
+				node_type *right = last_right(_map);
+
+				if (_size == 0)
+					return ;
+				right->parent->right = NULL;
+				clear_tree(_map);
+				_map = right;
+				_size = 0;
+			}
+
+			//OBSERVERS
+			key_compare key_comp() const
+			{
+				return key_compare();
+			}
+
+			class value_compare
+			{
+				public:
+					Compare comp;
+
+					value_compare(Compare c): comp(c)
+					{
+					}
+
+					virtual ~value_compare()
+					{
+					}
+
+					bool operator()(const value_type &x, const value_type &y) const
+					{
+						return comp(x.first, y.first);
+					}
+			};
+
+			value_compare value_comp() const
+			{
+				return value_compare(key_compare());
+			}
+
+			//MAP_OPERATIONS
+			iterator find(const key_type &k)
+			{
+				iterator it = begin();
+				iterator it_end = end();
+
+				while (it != it_end)
+				{
+					if (!_key_cmp((*it).first, k) && !_key_cmp(k, (*it).first))
+						break ;
+					it++;
+				}
+				return it;
+			}
+
+			const_iterator find(const key_type &k) const
+			{
+				const_iterator it = begin();
+				const_iterator it_end = end();
+
+				while (it != it_end)
+				{
+					if (!_key_cmp((*it).first, k) && !_key_cmp(k, (*it).first))
+						break ;
+					it++;
+				}
+				return it;
+			}
+
+			size_type count(const key_type &k) const
+			{
+				size_t ret = 0;
+				const_iterator it = begin();
+				const_iterator it_end = end();
+
+				while (it != it_end)
+				{
+					if (!_key_cmp((*it).first) && !_key_cmp(k, (*it).first))
+					{
+						ret++;
+						break ;						
+					}
+					it++;
+				}
+				return ret;
+			}
+
+			iterator lower_bound(const key_type &k)
+			{
+				iterator it = begin();
+				iterator it_end = end();
+
+				while (it != it_end)
+				{
+					if (!_key_cmp((*it).first, k))
+						break ;
+					it++;
+				}
+				return it;
+			}
+
+			iterator lower_bound(const key_type &k) const
+			{
+				const_iterator it = begin();
+				const_iterator it_end = end();
+
+				while (it != it_end)
+				{
+					if (!_key_cmp((*it).first, k))
+						break ;
+					it++;
+				}
+				return it;
+			}
+
+			iterator upper_bound(const key_type &k)
+			{
+				iterator it = begin();
+				iterator it_end = end();
+
+				while (it != it_end)
+				{
+					if (!_key_cmp(k, (*it).first))
+						break ;
+					it++;
+				}
+				return it;
+			}
+
+			iterator upper_bound(const key_type &k) const
+			{
+				iterator it = begin();
+				iterator it_end = end();
+
+				while (it != it_end)
+				{
+					if (!_key_cmp(k, (*it).first))
+						break ;
+					it++;
+				}
+				return it;
+			}
+
+			pair<iterator, iterator> equal_range(const key_type &k)
+			{
+				pair<iterator, iterator> ret;
+
+				ret.first = lower_bound(k);
+				ret.second = upper_bound(k);
+				return ret;
+			}
+
+			pair<const_iterator, const_iterator> equal_range(const key_type &k) const
+			{
+				pair<const_iterator, const_iterator> ret;
+
+				ret.first = lower_bound(k);
+				ret.second = upper_bound(k);
+				return ret;
+			}
 	};
 }
 
