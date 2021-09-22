@@ -81,6 +81,7 @@
 		"ranges": "cpp",
 		"stop_token": "cpp",
 		"cinttypes": "cpp",
-		"numbers": "cpp"
+		"numbers": "cpp",
+		"__functional_03": "cpp"
 	}
 }

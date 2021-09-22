@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/21 18:04:34 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/22 19:10:38 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ node<T>	*get_parent(node<T> *node)
 template <typename T>
 node<T>	*last_right(node<T> *node)
 {
-	while (node->right)
+	while (node->right != NULL)
 		node = node->right;
 	return	node;
 }
@@ -61,7 +61,7 @@ node<T>	*last_right(node<T> *node)
 template <typename T>
 node<T>	*last_left(node<T> *node)
 {
-	while (node->left)
+	while (node->left != NULL)
 		node = node->left;
 	return	node;
 }
@@ -105,7 +105,7 @@ namespace ft
 			{
 				this->first = p.first;
 				this->second = p.second;
-			};
+			}
 
 			pair(const Tkey &k, const Tval &v): first(k), second(v)
 			{
@@ -176,20 +176,22 @@ namespace ft
 	{
 		public:
 
-			typedef Tkey								key_type;
-			typedef Tvalue								map_value;
-			typedef ft::pair<key_type, map_value>		value_type;
-			typedef node<value_type>					node_type;
-			typedef Compare								key_compare;
-			typedef std::allocator<value_type>			allocator_type;
-			
+			typedef Tkey												key_type;
+			typedef Tvalue												map_value;
+			typedef ft::pair<key_type, map_value>						value_type;
+			typedef node<value_type>									node_type;
+			typedef Compare												key_compare;
+			typedef std::allocator<value_type>							allocator_type;
+			typedef std::allocator<node_type> 								nodeAlloc;
+			typedef typename Alloc::template rebind<node_type>::other	new_alloc;
+
 			typedef value_type							&reference;
-			typedef reference						const_reference;
+			typedef reference							const_reference;
 			typedef value_type							*pointer;
 			typedef const pointer						const_pointer;
 			
 			typedef iterator_m<value_type, node_type>				iterator;
-			typedef const_iterator_m<value_type, node_type>			const_iterator;
+			typedef const_iterator_m<value_type, node_type>					const_iterator;
 			typedef reverse_iterator_m<value_type, node_type>		reverse_iterator;
 			typedef const_reverse_iterator_m<value_type, node_type>	const_reverse_iterator;
 
@@ -201,6 +203,7 @@ namespace ft
 			node<value_type>	*_map;
 			size_type			_size;
 			allocator_type		_alloc;
+			nodeAlloc			_node_alloc;
 			key_compare			_key_cmp;
 
 			void	add_node(node_type	*n)
@@ -376,16 +379,18 @@ namespace ft
 				iterator	it = find(k);
 				if (it != end())
 					return	((*it).second);
-				return	(insert(value_type(k, map_value()))).first->second;
+				return	((insert(value_type(k, map_value()))).first->second);
 			}
 
 			//MODIFIERS
 			
 			pair<iterator, bool>	insert(const value_type &val)
 			{
-				ft::pair<iterator, bool>	ret;
-				value_type					new_pair(val);
-				node_type					*new_node = new node_type();
+				ft::pair<iterator, bool> ret;
+				value_type new_pair(val);
+				node_type *new_node = _node_alloc.allocate(1);
+				_node_alloc.construct(new_node, node_type());
+				//node_type					*new_node = new node_type();
 
 				if (_size > 0 && count(val.first) == 1)
 				{
@@ -640,7 +645,7 @@ namespace ft
 
 				while (it != it_end)
 				{
-					if (!_key_cmp((*it).first) && !_key_cmp(k, (*it).first))
+					if (!_key_cmp((*it).first, k) && !_key_cmp(k, (*it).first))
 					{
 						ret++;
 						break ;						

@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/09 12:25:14 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/17 12:23:45 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/22 18:45:02 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ namespace ft
 					node_type	*child = _map;
 
 					_map = _map->parent;
-					while (_map->rigt == child)
+					while (_map->right == child)
 					{
 						child = _map;
 						_map = _map->parent;
