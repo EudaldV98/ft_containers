@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 19:19:49 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/17 12:49:20 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/23 11:15:31 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,8 @@ namespace ft
 						ptr = _map;
 						_map = _map->parent;
 					}
-					return	*this;
 				}
+				return *this;
 			}
 
 			const_reverse_iterator_m	operator++(int)
@@ -112,17 +112,17 @@ namespace ft
 				if (_map->right != NULL)
 				{
 					_map = _map->right;
-					while (_map->left)
+					while (_map->left != NULL)
 						_map = _map->left;
 				}
 				else
 				{
-					node_type	*child = _map;
+					node_type	*ptr = _map;
 
 					_map = _map->parent;
-					while (_map->right == child)
+					while (_map->right == ptr)
 					{
-						child = _map;
+						ptr = _map;
 						_map = _map->parent;
 					}
 				}
@@ -132,6 +132,7 @@ namespace ft
 			const_reverse_iterator_m	operator--(int)
 			{
 				const_reverse_iterator_m	tmp = *this;
+
 				--(*this);
 				return	tmp;
 			}
@@ -151,12 +152,6 @@ namespace ft
 			{
 				return	&_map->value;
 			}
-
-			pointer			operator->() const
-			{
-				return	&_map->value;
-			}
-
 	};
 }
 

@@ -3,16 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jereligi <jereligi@student.42.fr>          +#+  +:+       +#+         #
+#    By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/03 14:12:12 by jereligi          #+#    #+#              #
-#    Updated: 2021/04/06 11:35:17 by jereligi         ###   ########.fr        #
+#    Updated: 2021/09/23 14:48:21 by jvaquer          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = tester_map
 
-SRC = 	./tester/tester.cpp	
+SRC = 	./tester.cpp	
 
 OBJ = $(SRC:.cpp=.o)
 

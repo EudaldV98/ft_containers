@@ -14,7 +14,7 @@
 # define BIDIRECTIONAL_ITERATOR_M_HPP
 
 # include "../../utils.hpp"
-//# include "../map.hpp"
+# include "../map.hpp"
 
 namespace ft
 {
@@ -66,10 +66,10 @@ namespace ft
 
 			iterator_m	operator++()
 			{
-				if (_map->right)
+				if (_map->right != NULL)
 				{
 					_map = _map->right;
-					while (_map->left)
+					while (_map->left != NULL)
 						_map = _map->left;
 				}
 				else
@@ -96,10 +96,10 @@ namespace ft
 
 			iterator_m	operator--()
 			{
-				if (_map->left)
+				if (_map->left != NULL)
 				{
 					_map = _map->left;
-					while (_map->right)
+					while (_map->right != NULL)
 						_map = _map->right;
 				}
 				else

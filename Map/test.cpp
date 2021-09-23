@@ -4,96 +4,106 @@
 #include <iostream>
 #include "../utils.hpp"
 
-// (*it).first
-// it.operator->()->first
-// map->operator[]('i');
-
-int main ()
+int main () 
 {
-	ft::map<char, int>	*map = new ft::map<char, int>();
+	srand(time(NULL));
+{
+	ft::map<char, int> map;
+	ft::map<char, int> map2;
+	ft::pair<char, int> p;
 
-	// ft::map<char, int>::iterator				it;
-	// ft::map<char, int>::iterator				ite;
+	//INSERT
+	std::cout << "Map Test" << std::endl;
+	std::cout << "Test Insert" << std::endl;
+	char c = 'a';
 
-	// map->operator[]('i');
-	map->insert(ft::pair<char, int>('c', 1));
-	map->insert(ft::pair<char, int>('f', 1));
-	map->insert(ft::pair<char, int>('b', 2));
+	for (int i = 1; i < 11; i++)
+	{
+		p.first = c++;
+		p.second = i;
+		std::cout << "map.insert(" << p << ")" << std::endl;
+		map.insert(p);
+	}
+	std::cout << "map.size() = " << map.size() << std::endl;
+	std::cout << "Print data in map via iterator:" << std::endl;
+	for (ft::map<char, int>::iterator it = map.begin(); it != map.end(); it++)
+	{
+		std::cout << "[" << it->first << "] = " << it->second << std::endl;
+	}
 
+	ft::map<char, int>::iterator it = map.begin();
+	it++;
+	it++;
+	it++;
+	std::cout << "\nAdd values in map2 with range iterator:" << std::endl;
+	map2.insert(it, map.end());
+	std::cout << "Print data in map2 via iterator:" << std::endl;
+	for (ft::map<char, int>::iterator it = map2.begin(); it != map2.end(); it++)
+	{
+		std::cout << "[" << it->first << "] = " << it->second << std::endl;
+	}
+	std::cout << "map.size() = " << map2.size() << std::endl;
 
-	std::cout << "max_size : " << map->max_size() << std::endl;
-	std::map<char, int>	*map2 = new std::map<char, int>();
+	std::cout << "\nAdd three first values of map into map2 with hint:" <<std::endl;
+	it = map.begin();
+	ft::map<char, int>::iterator it2 = map2.begin();
+	for (int i = 0; i < 3; i++)
+	{
+		map2.insert(it2, *it);
+		it++;
+		it2 = map2.begin();
+		it2++;
+	}
+	std::cout << "Print data in map2 via iterator:" << std::endl;
+	for (ft::map<char, int>::iterator it = map2.begin(); it != map2.end(); it++)
+	{
+		std::cout << "[" << it->first << "] = " << it->second << std::endl;
+	}
+	std::cout << "map.size() = " << map2.size() << std::endl;
+}
+{
+	ft::map<char, int> map;
+	ft::map<char, int> map2;
+	ft::map<char, int>::iterator it;
+	ft::pair<char, int> p;
 
-	map2->insert(std::pair<char, int>('c', 1));
-	map2->insert(std::pair<char, int>('f', 1));
-	map2->insert(std::pair<char, int>('b', 2));
-std::cout << "max_size : " << map2->max_size() << std::endl;
-	// map->insert(ft::pair<char, int>('a', 2));
-	// map->insert(ft::pair<char, int>('d', 3));
-	// map->insert(ft::pair<char, int>('e', 2));
-	// map->insert(ft::pair<char, int>('g', 2));
+	char tab[] = "zhmegfncsxd";
+	std::cout << "Insert 11 elements into map" << std::endl;
+	for (int i = 0; i < 11; i++)
+	{
+		p.first = tab[i];
+		p.second = i + 1;
+		std::cout << "map.insert(" << p << ")" << std::endl;
+		map.insert(p);
+	}
+	std::cout << "map.size() = " << map.size() << std::endl;
 
+	std::cout << "\nErase node with one child at head. Value 'z'" << std::endl;
+	map.erase('z');
+	std::cout << "Print data in map via iterator:" << std::endl;
+	for (ft::map<char, int>::iterator it = map.begin(); it != map.end(); it++)
+	{
+		std::cout << "[" << it->first << "] = " << it->second << std::endl;
+	}
+	std::cout << "map.size() = " << map.size() << std::endl;
 
-	// for (it = map->begin(); it != map->end(); it++)
-	// 	std::cout << "first :" << (*it).first << std::endl;
+	std::cout << "Erase leaf (No children) value 'd'" << std::endl;
+	map.erase('d');
+	std::cout << "Print data in map via iterator:" << std::endl;
+	for (ft::map<char, int>::iterator it = map.begin(); it != map.end(); it++)
+	{
+		std::cout << "[" << it->first << "] = " << it->second << std::endl;
+	}
+	std::cout << "map.size() = " << map.size() << std::endl;
 
-	// it = map->find('c');
-	// std::cout << "it : " << (*it).first << std::endl;
-	// map->erase(it);
-	
-
-	// // std::cout << std::endl;
-	// for (it = map->begin(); it != map->end(); it++)
-	// 	std::cout << "second :" << (*it).first << std::endl;
-
-
-	// std::cout << std::endl << std::endl;
-
-
-	// ft::map<int, int>	int_int_map;
-
-	// int_int_map[66] = 66;
-	// int_int_map[47] = 47;
-	// int_int_map[74] = 74;
-	// int_int_map[54] = 54;
-	// int_int_map[71] = 71;
-	// int_int_map[53] = 53;
-	// int_int_map[59] = 59;
-	// int_int_map[69] = 69;
-	// int_int_map[72] = 72;
-
-	// std::cout << "int_int_map : " << std::endl << int_int_map << std::endl;
-
-	// ft::map<int, int>::iterator itx = int_int_map.begin();
-
-	// std::cout << "ft::map<int, int>::iterator itx = int_int_map.begin();" << std::endl;
-
-	// itx = int_int_map.find(66);
-	// // itx++;
-	// // itx++;
-	// // itx++;
-	// // itx++;
-
-	// std::cout << "itx++" << std::endl;
-	// std::cout << "itx++" << std::endl;
-	// std::cout << "itx++" << std::endl;
-	// std::cout << "itx++" << std::endl << std::endl;
-
-	// std::cout << "*itx : " << *itx << std::endl << std::endl;
-
-	// int_int_map.erase(itx);
-	// std::cout << "int_int_map.erase(it);" << std::endl << std::endl;
-
-	// ft::map<char, int>::reverse_iterator				rit;
-
-	// rit = map->rbegin();
-	// std::cout << (*rit).first << std::endl;
-	// rit--;
-	// std::cout << (*rit).first << std::endl;
-	// map->clear();
-
-	// it = map->begin();
-	// std::cout << (*it).first << std::endl;
-
-  return 0;
+	std::cout << "Erase node with 2 children value 'e'" << std::endl;
+	map.erase('e');
+	std::cout << "Print data in map via iterator:" << std::endl;
+	for (ft::map<char, int>::iterator it = map.begin(); it != map.end(); it++)
+	{
+		std::cout << "[" << it->first << "] = " << it->second << std::endl;
+	}
+	std::cout << "map.size() = " << map.size() << std::endl;
+}
+	return 0;
 }

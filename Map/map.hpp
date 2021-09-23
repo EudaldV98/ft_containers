@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/22 19:10:38 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/23 18:39:31 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,18 +66,6 @@ node<T>	*last_left(node<T> *node)
 	return	node;
 }
 
-template <typename Tpair>
-std::ostream	&operator<<(std::ostream &o, node<Tpair> const &p)
-{
-	std:: cout << \
-	"curr = " << p.get_curr() << std::endl << \
-	"top = " << p.get_top() << std::endl << \
-	"left = " << p.get_left() << std::endl << \
-	"right = " << p.get_right() << std::endl << \
-	"value = " << p.get_pair() << std::endl;
-	return	o;
-}
-
 namespace ft
 {
 	template <class T>
@@ -91,10 +79,13 @@ namespace ft
 
 	//-------- PAIR CLASS --------
 
-	template <typename Tkey, typename Tval>
+	template <typename Tkey, typename Tvalue>
 	class	pair
 	{
 		public:
+
+			Tkey	first;
+			Tvalue	second;
 
 			pair(void)
 			{
@@ -107,7 +98,7 @@ namespace ft
 				this->second = p.second;
 			}
 
-			pair(const Tkey &k, const Tval &v): first(k), second(v)
+			pair(const Tkey &k, const Tvalue &v): first(k), second(v)
 			{
 			}
 
@@ -121,15 +112,12 @@ namespace ft
 				this->second = p.second;				
 				return	*this;
 			}
-
-			Tkey	first;
-			Tkey	second;
 	};
 
 	template <typename Tkey, typename Tvalue>
 	std::ostream	&operator<<(std::ostream &o, pair <Tkey, Tvalue> const &p)
 	{
-		std::cout << "Key = " << p.first << ", Value = " << p.second << " ";
+		std::cout << "[" << p.first << "] = " << p.second;
 		return	o;
 	}
 
@@ -292,7 +280,7 @@ namespace ft
 				if (_size > 0)
 					clear();
 				if (m.size() > 0)
-					insert(m.begin(), m.end());
+					this->insert(m.begin(), m.end());
 				return	*this;
 			}
 
@@ -430,126 +418,7 @@ namespace ft
 				erase((*position).first);
 			}
 
-			size_type	erase(const key_type &k)
-			{
-				iterator	it = find(k);
-				node_type	**to_del = it.get_map();
-				node_type	**parent = &to_del->parent;
-				node_type	*child;
-				node_type	*tmp;
-
-				if (!to_del->left && !to_del->right == NULL)
-				{
-					if ((*parent)->left == to_del)
-						(*parent)->left = NULL;
-					if ((*parent)->right == to_del)
-						(*parent)->right = NULL;
-					delete	to_del;
-				}
-				else if (!to_del->left || !to_del->right)
-				{
-					if (to_del->left)
-						child = to_del->left;
-					else
-						child = to_del->right;
-					child->parent = *parent;
-					if (to_del->parent)
-					{
-						if ((*parent)->left == to_del)
-							(*parent)->left = child;
-						else
-							(*parent)->right = child;
-					}
-					else
-						_map = child;
-					delete	to_del;
-				}
-				else
-				{
-					if (!to_del->parent)
-					{
-						tmp = to_del->left;
-						while (tmp->right)
-							tmp = tmp->right;
-						if (tmp == to_del->left)
-						{
-							tmp->parent = to_del->parent;
-							tmp->right = to_del->right;
-							to_del->right->parent = tmp;
-							if (to_del->parent)
-							{
-								if ((*parent)->left == to_del)
-									(*parent)->left = tmp;
-								else
-									(*parent)->left = tmp;
-							}
-							else
-								_map = tmp;
-						}
-						else
-						{
-							tmp->parent->right = NULL;
-							tmp->parent = to_del->parent;
-							tmp->left = to_del->left;
-							tmp->right = to_del->right;
-							to_del->right->parent = tmp;
-							to_del->left->parent = tmp;
-							if (to_del->parent != NULL)
-							{
-								if ((*parent)->left == to_del)
-									(*parent)->left = tmp;
-								else
-									(*parent)->right = tmp;	
-							}
-							else
-								_map = tmp;
-						}
-					}
-					else
-					{
-						tmp = to_del->right;
-						while (tmp->left)
-							tmp = tmp->left;
-						if (tmp == to_del->right)
-						{
-							tmp->parent = to_del->parent;
-							tmp->left = to_del->left;
-							to_del->left->parent = tmp;
-							if (to_del->parent)
-							{
-								if ((*parent)->left == to_del)
-									(*parent)->left = tmp;
-								else
-									(*parent)->right = tmp;
-							}
-							else
-								_map = tmp;
-						}
-						else
-						{
-							tmp->parent->left = tmp->right;
-							tmp->right->parent = tmp->parent;
-							tmp->right = to_del->right;
-							tmp->right->parent = tmp;
-							tmp->parent = to_del->parent;
-							tmp->left = to_del->left;
-							tmp->left->parent = tmp;
-							if (to_del->parent)
-							{
-								if ((*parent)->left == to_del)
-									(*parent)->left = tmp;
-								else
-									(*parent)->right = tmp;
-							}
-							else
-								_map = tmp;
-						}
-					}
-					delete to_del;
-				}
-				_size--;
-				return 1;
-			}
+			
 
 			void erase (iterator first, iterator last)
 			{

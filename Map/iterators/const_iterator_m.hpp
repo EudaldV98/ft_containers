@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/09 12:25:14 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/22 18:45:02 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/23 11:40:56 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,20 +79,20 @@ namespace ft
 			//ARITHMETICS OPERATOR
 			const_iterator_m	operator++()
 			{
-				if (_map->right)
+				if (_map->right != NULL)
 				{
 					_map = _map->right;
-					while (_map->left)
+					while (_map->left != NULL)
 						_map = _map->left;
 				}
 				else
 				{
-					node_type	*child = _map;
+					node_type	*ptr = _map;
 
 					_map = _map->parent;
-					while (_map->right == child)
+					while (_map->right == ptr)
 					{
-						child = _map;
+						ptr = _map;
 						_map = _map->parent;
 					}
 				}
@@ -109,20 +109,20 @@ namespace ft
 			
 			const_iterator_m	operator--()
 			{
-				if (_map->left)
+				if (_map->left != NULL)
 				{
 					_map = _map->left;
-					while (_map->right)
+					while (_map->right != NULL)
 						_map = _map->right;
 				}
 				else
 				{
-					node_type	*child = _map;
+					node_type	*ptr = _map;
 
 					_map = _map->parent;
-					while (_map && child == _map->left)
+					while (_map && ptr == _map->left)
 					{
-						child = _map;
+						ptr = _map;
 						_map = _map->parent;
 					}
 				}

@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 10:54:58 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/17 12:26:11 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/23 11:08:45 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "../../utils.hpp"
 # include "./iterator_m.hpp"
-//# include "../map.hpp"
+# include "../map.hpp"
 
 namespace ft
 {
@@ -96,13 +96,14 @@ namespace ft
 						ptr = _map;
 						_map = _map->parent;
 					}
-					return	*this;
 				}
+				return *this;
 			}
 
 			reverse_iterator_m	operator++(int)
 			{
 				reverse_iterator_m	tmp = *this;
+
 				++(*this);
 				return	tmp;
 			}
@@ -112,7 +113,7 @@ namespace ft
 				if (_map->right != NULL)
 				{
 					_map = _map->right;
-					while (_map->left)
+					while (_map->left != NULL)
 						_map = _map->left;
 				}
 				else
@@ -132,6 +133,7 @@ namespace ft
 			reverse_iterator_m	operator--(int)
 			{
 				reverse_iterator_m	tmp = *this;
+
 				--(*this);
 				return	tmp;
 			}
