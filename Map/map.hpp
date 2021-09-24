@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/24 17:38:59 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/24 18:30:41 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ struct node
 		node	*parent;
 		node	*left;
 		node	*right;
+
+	//CONSTRUCTORS
 };
 
 template <typename T>
@@ -100,8 +102,10 @@ namespace ft
 		private:
 
 			node<value_type>	*_map;
-			node<value_type>	*_begin;
-			node<value_type>	*_end;
+			node<value_type>	*_upper;
+			node<value_type>	*_lower;
+			node<value_type>	*_fake_begin;
+			node<value_type>	*_fake_end;
 			size_type			_size;
 			allocator_type		_alloc;
 			nodeAlloc			_node_alloc;
@@ -298,7 +302,7 @@ namespace ft
 			//CONSTRUCTORS
 			explicit map(const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type())
 			{
-				_map = new node_type();
+				_map = NULL;
 				_map->left = NULL;
 				_map->right = NULL;
 				_map->parent = NULL;
@@ -306,7 +310,13 @@ namespace ft
 				_alloc = alloc;
 				_key_cmp = comp;
 
-				_end = _map;
+				_fake_begin = new node_type();
+				_fake_begin->left = NULL;
+				_fake_begin->right = NULL;
+				_fake_end = _fake_begin;
+
+				_lower = _fake_begin;
+				_upper = _fake_end;
 			}
 
 			template <class InputIt>
@@ -319,7 +329,6 @@ namespace ft
 				_size = 0;
 				_alloc = alloc;
 				_key_cmp = comp;
-				_end = _map;
 				insert(first, last);
 			}
 
@@ -334,13 +343,22 @@ namespace ft
 
 			map(const map &x)
 			{
-				_map = new node_type();
+				_map = NULL;
 				_map->left = NULL;
 				_map->right = NULL;
 				_map->parent = NULL;
 				_size = 0;
 				_alloc = allocator_type();
 				_key_cmp = key_compare();
+				
+				_fake_begin = new node_type();
+				_fake_begin->left = NULL;
+				_fake_begin->right = NULL;
+				_fake_end = _fake_begin;
+
+				_lower = _fake_begin; //ou NULL?
+				_upper = _fake_end; //ou NULL?
+
 				*this = x;
 			}
 
