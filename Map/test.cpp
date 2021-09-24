@@ -2,7 +2,7 @@
 #include "map.hpp"
 #include <vector>
 #include <iostream>
-#include "../utils.hpp"
+#include "../Utils/utils.hpp"
 
 int main () 
 {
@@ -104,6 +104,23 @@ int main ()
 		std::cout << "[" << it->first << "] = " << it->second << std::endl;
 	}
 	std::cout << "map.size() = " << map.size() << std::endl;
+
+	std::cout << "Erase begin() of map being: " << map.begin()->first << std::endl;
+	map.erase(map.begin());
+	std::cout << "Print data in map via iterator:" << std::endl;
+	for (ft::map<char, int>::iterator it = map.begin(); it != map.end(); it++)
+	{
+		std::cout << "[" << it->first << "] = " << it->second << std::endl;
+	}
+	std::cout << "map.size() = " << map.size() << std::endl;
+
+	ft::map<char, int>::iterator m_end = map.end();
+	std::cout << "LOL: " << map.end()->second << std::endl;
+	it = map.begin();
+	it++; it++;
+	m_end--; m_end--; //m_end--;
+	std::cout << "Erase begin()+2 to end()-1 from map: " << it->first << " to " << m_end->first << std::endl;
+	//map.erase(it, m_end);
 }
 	return 0;
 }

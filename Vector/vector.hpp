@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 12:36:35 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/22 16:57:54 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/24 15:19:13 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@
 # include <sstream>
 //# include "iterators/iterator.hpp"
 # include "iterators/reverse_iterator.hpp"
-# include "../utils.hpp"
-# include "../iterator_traits.hpp"
+# include "../Utils/utils.hpp"
+# include "../Utils/iterator_traits.hpp"
 
 namespace ft
 {

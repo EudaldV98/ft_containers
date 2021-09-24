@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/23 18:39:31 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/24 17:38:59 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define MAP_HPP
 
 # include	<limits>
-# include	"../utils.hpp"
+# include	"../Utils/utils.hpp"
 # include	"./iterators/iterator_m.hpp"
 # include	"./iterators/const_iterator_m.hpp"
 # include	"./iterators/reverse_iterator_m.hpp"
@@ -68,95 +68,6 @@ node<T>	*last_left(node<T> *node)
 
 namespace ft
 {
-	template <class T>
-	struct	less
-	{
-		bool	operator()(const T &lhs, const T &rhs) const
-		{
-			return lhs < rhs;
-		}
-	};
-
-	//-------- PAIR CLASS --------
-
-	template <typename Tkey, typename Tvalue>
-	class	pair
-	{
-		public:
-
-			Tkey	first;
-			Tvalue	second;
-
-			pair(void)
-			{
-			}
-
-			template <class X, class Y>
-			pair (const pair<X, Y> &p)
-			{
-				this->first = p.first;
-				this->second = p.second;
-			}
-
-			pair(const Tkey &k, const Tvalue &v): first(k), second(v)
-			{
-			}
-
-			~pair()
-			{
-			}
-
-			pair	&operator=(const pair &p)
-			{
-				this->first = p.first;
-				this->second = p.second;				
-				return	*this;
-			}
-	};
-
-	template <typename Tkey, typename Tvalue>
-	std::ostream	&operator<<(std::ostream &o, pair <Tkey, Tvalue> const &p)
-	{
-		std::cout << "[" << p.first << "] = " << p.second;
-		return	o;
-	}
-
-	template <class T1, class T2>
-	bool			operator==(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs)
-	{
-		return	lhs.first == rhs.first && lhs.second == rhs.second;
-	}
-
-	template <class T1, class T2>
-	bool			operator!=(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs)
-	{
-		return	!(lhs == rhs);
-	}
-
-	template <class T1, class T2>
-	bool			operator<(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs)
-	{
-		return	lhs.first < rhs.first || (!(lhs.first < rhs.first) && lhs.second < rhs.second);
-	}
-
-	template <class T1, class T2>
-	bool			operator>(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs)
-	{
-		return	rhs < lhs;
-	}
-
-	template <class T1, class T2>
-	bool			operator<=(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs)
-	{
-		return	!(rhs < lhs);
-	}
-
-	template <class T1, class T2>
-	bool			operator>=(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs)
-	{
-		return	!(lhs > rhs);
-	}
-
 	//-------- MAP CLASS --------
 
 	template <class Tkey, class Tvalue, class Compare = ft::less<Tkey>, class Alloc = std::allocator<pair<const Tkey, Tvalue> > >
@@ -179,7 +90,7 @@ namespace ft
 			typedef const pointer						const_pointer;
 			
 			typedef iterator_m<value_type, node_type>				iterator;
-			typedef const_iterator_m<value_type, node_type>					const_iterator;
+			typedef const_iterator_m<value_type, node_type>			const_iterator;
 			typedef reverse_iterator_m<value_type, node_type>		reverse_iterator;
 			typedef const_reverse_iterator_m<value_type, node_type>	const_reverse_iterator;
 
@@ -189,6 +100,8 @@ namespace ft
 		private:
 
 			node<value_type>	*_map;
+			node<value_type>	*_begin;
+			node<value_type>	*_end;
 			size_type			_size;
 			allocator_type		_alloc;
 			nodeAlloc			_node_alloc;
@@ -248,6 +161,138 @@ namespace ft
 				tmp = NULL;
 			}
 
+			node_type		*find_node(key_type key)
+			{
+				node_type	*tmp = _map;
+				value_type	val;
+
+				val.first = key;
+				val.second = 0;
+				if (_size == 0)
+					return (NULL);
+				while (true)
+				{
+					if (tmp->value.first == val.first)
+						return (tmp);
+					if (value_comp()(val, tmp->value))
+					{
+						if (tmp->left)
+							tmp = tmp->left;
+						else
+							break;
+					}
+					else
+					{
+						if (tmp->right)
+							tmp = tmp->right;
+						else
+							break;
+					}
+				}
+				return (NULL);
+			}
+
+			void		erase_leaf(node_type *leaf)
+			{
+				if (_size == 1)
+				{
+					delete leaf;
+					leaf = NULL;
+					_map = NULL;
+					_size = 0;
+					return ;
+				}
+				if (leaf->parent && value_comp()(leaf->value, leaf->parent->value))
+					leaf->parent->left = NULL;
+				else
+				{
+					if (leaf->right == last_right(_map))
+						leaf->parent->right = last_right(_map);
+					else
+						leaf->parent->right = NULL;
+				}
+				delete leaf;
+				leaf = NULL;
+				// set_upper();
+				// set_lower();
+				_size--;
+			}
+
+			void		erase_single(node_type *single)
+			{
+				if (single->left && (!single->right || single->right == last_right(_map)))
+				{
+					if (single->parent && value_comp()(single->value, single->parent->value))
+						single->parent->left = single->left;
+					else if (single->parent)
+						single->parent->right = single->left;
+					if (_map == single)
+					{
+						_map = single->left;
+						single->left->parent = NULL;
+					}
+					else
+						single->left->parent = single->parent;
+				}
+				else if (single->right && single->right != last_right(_map) && !single->left)
+				{
+					if (single->parent && value_comp()(single->value, single->parent->value))
+						single->parent->left = single->right;
+					else if (single->parent)
+						single->parent->right = single->right;
+					single->right->parent = single->parent;
+					if (single == _map)
+						_map = single->right;
+				}
+				delete single;
+				single = NULL;
+				// set_upper();
+				// set_lower();
+				_size--;
+			}
+
+			void		erase_double(node_type *node)
+			{
+				node_type *near = node;
+				node_type *traverser;
+				value_type	tmp;
+
+				near = near->left;
+				while (near->right)
+					near = near->right;
+				if (node->parent)
+				{
+					if (value_comp()(node->value, node->parent->value))
+						node->parent->left = near;
+					else
+						node->parent->right = near;
+					near->parent = node->parent;
+					node->parent = NULL;
+				}
+				near->right = node->right;
+				near->right->parent = near;
+				node->right = NULL;
+				if (near->parent->value.first != node->value.first)
+				{
+					if (near->left)
+					{
+						traverser = near->left;
+						while (traverser->left)
+							traverser = traverser->left;
+						traverser->left = node->right;
+						node->left->parent = traverser;
+					}
+				}
+				if (node == _map)
+				{
+					_map = near;
+					near->parent = NULL;
+				}
+				delete node;
+				node = NULL;
+				_size--;
+			}
+
 		public:
 
 			//CONSTRUCTORS
@@ -260,6 +305,8 @@ namespace ft
 				_size = 0;
 				_alloc = alloc;
 				_key_cmp = comp;
+
+				_end = _map;
 			}
 
 			template <class InputIt>
@@ -272,6 +319,7 @@ namespace ft
 				_size = 0;
 				_alloc = alloc;
 				_key_cmp = comp;
+				_end = _map;
 				insert(first, last);
 			}
 
@@ -412,18 +460,42 @@ namespace ft
 				}
 			}
 
-			//erase
+			//Erase
+
+			size_type		erase(const key_type& k)
+			{
+				node_type *tmp = find_node(k);
+
+				if (!tmp)
+					return (0);
+				if (tmp)
+				{
+					if ((!tmp->left && !tmp->right) ||
+										(!tmp->left && tmp->right == last_right(_map)))
+						erase_leaf(tmp);
+					else if ((tmp->left && (!tmp->right || tmp->right == last_right(_map))) ||
+							(tmp->right && tmp->right != last_right(_map) && !tmp->left))
+						erase_single(tmp);
+					else
+						erase_double(tmp);
+				}
+				return (_size);
+			}
+
 			void		erase(iterator position)
 			{
-				erase((*position).first);
+				this->erase(position->first);
 			}
 
 			
 
 			void erase (iterator first, iterator last)
 			{
-				while (first != last)
-					erase(first++);
+				for (iterator tmp = first; first != last; tmp++)
+				{
+					erase(first);
+					first = tmp;
+				}
 			}
 
 			void swap(map &x)

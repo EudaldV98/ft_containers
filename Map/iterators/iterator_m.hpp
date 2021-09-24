@@ -13,7 +13,7 @@
 #ifndef BIDIRECTIONAL_ITERATOR_M_HPP
 # define BIDIRECTIONAL_ITERATOR_M_HPP
 
-# include "../../utils.hpp"
+# include "../../Utils/utils.hpp"
 # include "../map.hpp"
 
 namespace ft
@@ -74,12 +74,12 @@ namespace ft
 				}
 				else
 				{
-					node_type *child = _map;
+					node_type *tmp = _map;
 
 					_map = _map->parent;
-					while (_map->right == child)
+					while (_map->parent && _map->right == tmp)
 					{
-						child = _map;
+						tmp = _map;
 						_map = _map->parent;
 					}
 				}
@@ -104,12 +104,12 @@ namespace ft
 				}
 				else
 				{
-					node_type *child = _map;
+					node_type *tmp = _map;
 
 					_map = _map->parent;
-					while (_map && child == _map->left)
+					while (_map->parent && _map->left == tmp)
 					{
-						child = _map;
+						tmp = _map;
 						_map = _map->parent;
 					}
 				}

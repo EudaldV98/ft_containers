@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Stack.hpp                                          :+:      :+:    :+:   */
+/*   stack.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 12:39:21 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/20 12:41:44 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/24 12:21:09 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,24 +27,22 @@ namespace ft
 			typedef	typename vector<T>::size_type	size_type;
 			typedef Container	container_type;
 
-		private:
-
-			container_type _container;
+			container_type c;
 
 		public:
 
-			explicit stack(const container_type &ctnr = container_type()): _container(ctnr)
+			explicit stack(const container_type &ctnr = container_type()): c(ctnr)
 			{
 			}
 
 			stack(stack const &src)
 			{
-				_container = src._container;
+				c = src.c;
 			}
 			
 			stack &operator=(stack const &src)
 			{
-				_container = src._container;
+				c = src.c;
 				return *this;
 			}
 
@@ -54,32 +52,32 @@ namespace ft
 
 			bool				empty() const
 			{
-				return	_container.empty();
+				return	c.empty();
 			}
 
 			size_type			size() const
 			{
-				return	_container.size();
+				return	c.size();
 			}
 
 			value_type			&top()
 			{
-				return	_container.back();
+				return	c.back();
 			}
 
 			const value_type	&top() const
 			{
-				return	_container.back();
+				return	c.back();
 			}
 
 			void				push(const value_type &val)
 			{
-				_container.push_back(val);
+				c.push_back(val);
 			}
 
 			void				pop()
 			{
-				_container.pop_back();
+				c.pop_back();
 			}
 
 			template <class T2, class Cntr>
@@ -103,32 +101,32 @@ namespace ft
 
 	template <class T, class Container>
 	bool operator== (const stack<T,Container>& lhs, const stack<T,Container>& rhs)	{
-		return (lhs._container == rhs._container);
+		return (lhs.c == rhs.c);
 	}
 	
 	template <class T, class Container>
 	bool operator!= (const stack<T,Container>& lhs, const stack<T,Container>& rhs) {
-		return (lhs._container != rhs._container);
+		return (lhs.c != rhs.c);
 	}
 	
 	template <class T, class Container>
 	bool operator<  (const stack<T,Container>& lhs, const stack<T,Container>& rhs) {
-		return (lhs._container < rhs._container);
+		return (lhs.c < rhs.c);
 	}
 	
 	template <class T, class Container>
 	bool operator<= (const stack<T,Container>& lhs, const stack<T,Container>& rhs) {
-		return (lhs._container <= rhs._container);
+		return (lhs.c <= rhs.c);
 	}
 	
 	template <class T, class Container>
 	bool operator>  (const stack<T,Container>& lhs, const stack<T,Container>& rhs) {
-		return (lhs._container > rhs._container);
+		return (lhs.c > rhs.c);
 	}
 	
 	template <class T, class Container>
   	bool operator>= (const stack<T,Container>& lhs, const stack<T,Container>& rhs) {
-		  return (lhs._container >= rhs._container);
+		  return (lhs.c >= rhs.c);
 	  }
 }
 
