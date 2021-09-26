@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/24 18:30:41 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/26 22:23:06 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,17 @@
 # include	"./iterators/const_reverse_iterator_m.hpp"
 
 
-template <typename Tpair>
+template <class T>
 struct node
 {
 	public:
 
-		Tpair	value;
-		node	*parent;
-		node	*left;
-		node	*right;
+		typedef T value_type;
 
-	//CONSTRUCTORS
+		node		*parent;
+		node		*left;
+		node		*right;
+		value_type	value;
 };
 
 template <typename T>
@@ -102,45 +102,16 @@ namespace ft
 		private:
 
 			node<value_type>	*_map;
+			public:
 			node<value_type>	*_upper;
 			node<value_type>	*_lower;
 			node<value_type>	*_fake_begin;
 			node<value_type>	*_fake_end;
+			private:
 			size_type			_size;
 			allocator_type		_alloc;
 			nodeAlloc			_node_alloc;
 			key_compare			_key_cmp;
-
-			void	add_node(node_type	*n)
-			{
-				node_type	**parent = &_map;
-				node_type	**ptr = &_map;
-				node_type	*right = last_right(_map);
-				bool		left = -1;
-				
-				while (*ptr && *ptr != right)
-				{
-					parent = ptr;
-					left = _key_cmp(n->value.first, (*ptr)->value.first);
-					if (left)
-						ptr = &(*ptr)->left;
-					else
-						ptr = &(*ptr)->right;
-				}
-				if (*ptr == NULL)
-				{
-					n->parent = (*parent);
-					*ptr = n;
-				}
-				else
-				{
-					*ptr = n;
-					n->parent = right->parent;
-					right->parent = last_right(n);
-					last_right(n)->right = right;
-				}
-				_size++;
-			}
 
 			void	clear_tree(node_type *m)
 			{
@@ -217,8 +188,8 @@ namespace ft
 				}
 				delete leaf;
 				leaf = NULL;
-				// set_upper();
-				// set_lower();
+				set_upper();
+				set_lower();
 				_size--;
 			}
 
@@ -250,8 +221,8 @@ namespace ft
 				}
 				delete single;
 				single = NULL;
-				// set_upper();
-				// set_lower();
+				set_upper();
+				set_lower();
 				_size--;
 			}
 
@@ -297,12 +268,38 @@ namespace ft
 				_size--;
 			}
 
+
+			void	set_upper()
+			{
+				node_type *node = _map;
+
+				while (node->right)
+					node = node->right;
+				if (node == _upper)
+					return ;
+				if (_upper)
+					delete _upper;
+				node->right = new node_type();
+				_upper = node->right;
+				_upper->parent = node;
+			}
+
+			void	set_lower()
+			{
+				node_type *node = _map;
+
+				while (node->left)
+					node = node->left;
+				_lower = node;
+				node->left = NULL;
+			}
+
 		public:
 
 			//CONSTRUCTORS
 			explicit map(const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type())
 			{
-				_map = NULL;
+				_map = new node_type();
 				_map->left = NULL;
 				_map->right = NULL;
 				_map->parent = NULL;
@@ -427,7 +424,7 @@ namespace ft
 				return	(std::numeric_limits<difference_type>::max() / (sizeof(node_type) / 2 ? : 1));
 			}
 
-			//ELEMENT ACCESS
+			//valueENT ACCESS
 			map_value	&operator[](const key_type &k)
 			{
 				iterator	it = find(k);
@@ -440,26 +437,74 @@ namespace ft
 			
 			pair<iterator, bool>	insert(const value_type &val)
 			{
-				ft::pair<iterator, bool> ret;
-				value_type new_pair(val);
-				node_type *new_node = _node_alloc.allocate(1);
-				_node_alloc.construct(new_node, node_type());
-				//node_type					*new_node = new node_type();
+				node_type		*node = _map;
+				node_type		*create = NULL;
 
-				if (_size > 0 && count(val.first) == 1)
+				if (_size == 0)
 				{
-					ret.second = false;
-					return	ret;
+					_map = new node_type();
+					_map->parent = NULL;
+					_map->value = val;
+					_lower = _map;
+					_upper = new node_type();
+					_map->right = _upper;
+					_upper->parent = _map;
+					_size++;
+					return (make_pair(iterator(_map), true));
 				}
-
-				new_node->value = new_pair;
-				new_node->left = NULL;
-				new_node->right = NULL;
-				new_node->parent = NULL;
-
-				add_node(new_node);
-				ret.first = find(val.first);
-				return	ret;
+				while (true)
+				{
+					if (node->value.first == val.first)
+					{
+						node->value.second = val.second;
+						return (make_pair(iterator(node), false));
+					}
+					if (value_comp()(val, node->value))
+					{
+						if (node->left)
+							node = node->left;
+						else
+						{
+							create = new node_type();
+							create->value = val;
+							create->right = NULL;
+							create->left = NULL;
+							create->parent = node;
+							if (node->left == _lower)
+								create->left = _lower;
+							node->left = create;
+							break ;
+						}
+					}
+					else
+					{
+						if (node->right)
+							node = node->right;
+						else
+						{
+							create = new node_type();
+							create->value = val;
+							create->right = NULL;
+							create->left = NULL;
+							create->parent = node;
+							if (node->right == _upper)
+								create->right = _upper;
+							if (node == _upper)
+							{
+								_upper->value = val;
+								_upper->right = create;
+								_upper->parent = node->parent;
+								_upper = create;
+							}
+							else
+								node->right = create;
+							break ;
+						}
+					}
+				}
+				set_lower();
+				_size++;
+				return (make_pair(iterator(create), true));
 			}
 
 			iterator				insert(iterator position, const value_type &val)

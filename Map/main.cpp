@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/24 16:32:08 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/24 16:49:18 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/26 22:15:18 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int main(void)
 	std::cout << "LOL: " << map.end()->second << std::endl;
 	it = map.begin();
 	it++; it++;
-	m_end--; m_end--; //m_end--;
+	m_end--; m_end--; m_end--;
 	std::cout << "Erase begin()+2 to end()-1 from map: " << it->first << " to " << m_end->first << std::endl;
     return 0;
 }

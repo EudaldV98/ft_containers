@@ -24,7 +24,7 @@ int main ()
 		std::cout << "map.insert(" << p << ")" << std::endl;
 		map.insert(p);
 	}
-	std::cout << "map.size() = " << map.size() << std::endl;
+	std::cout << "map.size() = " << map.size() << " |TOP = " << map._upper->value.first << " |LOWER = " << map._lower->value.first << std::endl;
 	std::cout << "Print data in map via iterator:" << std::endl;
 	for (ft::map<char, int>::iterator it = map.begin(); it != map.end(); it++)
 	{
@@ -118,7 +118,7 @@ int main ()
 	std::cout << "LOL: " << map.end()->second << std::endl;
 	it = map.begin();
 	it++; it++;
-	m_end--; m_end--; //m_end--;
+	m_end--; m_end--; m_end--;
 	std::cout << "Erase begin()+2 to end()-1 from map: " << it->first << " to " << m_end->first << std::endl;
 	//map.erase(it, m_end);
 }
