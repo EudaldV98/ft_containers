@@ -42,7 +42,7 @@ int main ()
 	{
 		std::cout << "[" << it->first << "] = " << it->second << std::endl;
 	}
-	std::cout << "map.size() = " << map2.size() << std::endl;
+	std::cout << "map.size() = " << map.size() << " |TOP = " << map._upper->value.first << " |LOWER = " << map._lower->value.first << std::endl;
 
 	std::cout << "\nAdd three first values of map into map2 with hint:" <<std::endl;
 	it = map.begin();
@@ -59,7 +59,7 @@ int main ()
 	{
 		std::cout << "[" << it->first << "] = " << it->second << std::endl;
 	}
-	std::cout << "map.size() = " << map2.size() << std::endl;
+	std::cout << "map.size() = " << map.size() << " |TOP = " << map._upper->value.first << " |LOWER = " << map._lower->value.first << std::endl;
 }
 {
 	ft::map<char, int> map;
@@ -76,7 +76,7 @@ int main ()
 		std::cout << "map.insert(" << p << ")" << std::endl;
 		map.insert(p);
 	}
-	std::cout << "map.size() = " << map.size() << std::endl;
+	std::cout << "map.size() = " << map.size() << " |TOP = " << map._upper->value.first << " |LOWER = " << map._lower->value.first << std::endl;
 
 	std::cout << "\nErase node with one child at head. Value 'z'" << std::endl;
 	map.erase('z');
@@ -85,7 +85,7 @@ int main ()
 	{
 		std::cout << "[" << it->first << "] = " << it->second << std::endl;
 	}
-	std::cout << "map.size() = " << map.size() << std::endl;
+	std::cout << "map.size() = " << map.size() << " |TOP = " << map._upper->value.first << " |LOWER = " << map._lower->value.first << std::endl;
 
 	std::cout << "Erase leaf (No children) value 'd'" << std::endl;
 	map.erase('d');
@@ -94,7 +94,7 @@ int main ()
 	{
 		std::cout << "[" << it->first << "] = " << it->second << std::endl;
 	}
-	std::cout << "map.size() = " << map.size() << std::endl;
+	std::cout << "map.size() = " << map.size() << " |TOP = " << map._upper->value.first << " |LOWER = " << map._lower->value.first << std::endl;
 
 	std::cout << "Erase node with 2 children value 'e'" << std::endl;
 	map.erase('e');
@@ -103,7 +103,7 @@ int main ()
 	{
 		std::cout << "[" << it->first << "] = " << it->second << std::endl;
 	}
-	std::cout << "map.size() = " << map.size() << std::endl;
+	std::cout << "map.size() = " << map.size() << " |TOP = " << map._upper->value.first << " |LOWER = " << map._lower->value.first << std::endl;
 
 	std::cout << "Erase begin() of map being: " << map.begin()->first << std::endl;
 	map.erase(map.begin());
@@ -112,7 +112,7 @@ int main ()
 	{
 		std::cout << "[" << it->first << "] = " << it->second << std::endl;
 	}
-	std::cout << "map.size() = " << map.size() << std::endl;
+	std::cout << "map.size() = " << map.size() << " |TOP = " << map._upper->value.first << " |LOWER = " << map._lower->value.first << std::endl;
 
 	ft::map<char, int>::iterator m_end = map.end();
 	std::cout << "LOL: " << map.end()->second << std::endl;

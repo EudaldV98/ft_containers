@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/26 22:23:06 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/27 18:20:46 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,20 @@ struct node
 {
 	public:
 
-		typedef T value_type;
+		typedef T 	value_type;
 
 		node		*parent;
 		node		*left;
 		node		*right;
 		value_type	value;
+
+		node(void)
+		{
+			parent = NULL;
+			left = NULL;
+			right = NULL;
+			//value = NULL;
+		}
 };
 
 template <typename T>
@@ -174,17 +182,19 @@ namespace ft
 					delete leaf;
 					leaf = NULL;
 					_map = NULL;
+					delete _fake_end;
+					_fake_end = _fake_begin;
+					_fake_begin->parent = NULL;
+					_upper = _fake_begin;
+					_lower = _fake_begin;
 					_size = 0;
 					return ;
 				}
-				if (leaf->parent && value_comp()(leaf->value, leaf->parent->value))
+				if (leaf->parent && leaf->parent->left == leaf)
 					leaf->parent->left = NULL;
-				else
+				else if (leaf->parent && leaf->parent->right == leaf)
 				{
-					if (leaf->right == last_right(_map))
-						leaf->parent->right = last_right(_map);
-					else
-						leaf->parent->right = NULL;
+					leaf->parent->right = NULL;
 				}
 				delete leaf;
 				leaf = NULL;
@@ -193,34 +203,34 @@ namespace ft
 				_size--;
 			}
 
-			void		erase_single(node_type *single)
+			void		erase_single(node_type *node)
 			{
-				if (single->left && (!single->right || single->right == last_right(_map)))
+				if (node->left && (!node->right || node->right == last_right(_map)))
 				{
-					if (single->parent && value_comp()(single->value, single->parent->value))
-						single->parent->left = single->left;
-					else if (single->parent)
-						single->parent->right = single->left;
-					if (_map == single)
+					if (node->parent && value_comp()(node->value, node->parent->value))
+						node->parent->left = node->left;
+					else if (node->parent)
+						node->parent->right = node->left;
+					if (_map == node)
 					{
-						_map = single->left;
-						single->left->parent = NULL;
+						_map = node->left;
+						node->left->parent = NULL;
 					}
 					else
-						single->left->parent = single->parent;
+						node->left->parent = node->parent;
 				}
-				else if (single->right && single->right != last_right(_map) && !single->left)
+				else if (node->right && node->right != last_right(_map) && !node->left)
 				{
-					if (single->parent && value_comp()(single->value, single->parent->value))
-						single->parent->left = single->right;
-					else if (single->parent)
-						single->parent->right = single->right;
-					single->right->parent = single->parent;
-					if (single == _map)
-						_map = single->right;
+					if (node->parent && value_comp()(node->value, node->parent->value))
+						node->parent->left = node->right;
+					else if (node->parent)
+						node->parent->right = node->right;
+					node->right->parent = node->parent;
+					if (node == _map)
+						_map = node->right;
 				}
-				delete single;
-				single = NULL;
+				delete node;
+				node = NULL;
 				set_upper();
 				set_lower();
 				_size--;
@@ -229,8 +239,7 @@ namespace ft
 			void		erase_double(node_type *node)
 			{
 				node_type *near = node;
-				node_type *traverser;
-				value_type	tmp;
+				node_type *tmp;
 
 				near = near->left;
 				while (near->right)
@@ -251,11 +260,11 @@ namespace ft
 				{
 					if (near->left)
 					{
-						traverser = near->left;
-						while (traverser->left)
-							traverser = traverser->left;
-						traverser->left = node->right;
-						node->left->parent = traverser;
+						tmp = near->left;
+						while (tmp->left)
+							tmp = tmp->left;
+						tmp->left = node->right;
+						node->left->parent = tmp;
 					}
 				}
 				if (node == _map)
@@ -268,30 +277,35 @@ namespace ft
 				_size--;
 			}
 
-
 			void	set_upper()
 			{
 				node_type *node = _map;
 
-				while (node->right)
+				while (node->right && node->right != _fake_end)
 					node = node->right;
-				if (node == _upper)
-					return ;
-				if (_upper)
-					delete _upper;
-				node->right = new node_type();
-				_upper = node->right;
-				_upper->parent = node;
+				_upper = node;
+
+				if (_upper != _fake_end->parent)
+				{
+					_upper->right = _fake_end;
+					_fake_end->parent = _upper;
+				}
 			}
 
 			void	set_lower()
 			{
 				node_type *node = _map;
-
-				while (node->left)
+				while (node->left && node->left != _fake_begin)
 					node = node->left;
+
 				_lower = node;
-				node->left = NULL;
+
+				if (_lower != _fake_begin->parent)
+				{
+					
+					_lower->left = _fake_begin;
+					_fake_begin->parent = _lower;
+				}
 			}
 
 		public:
@@ -299,17 +313,12 @@ namespace ft
 			//CONSTRUCTORS
 			explicit map(const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type())
 			{
-				_map = new node_type();
-				_map->left = NULL;
-				_map->right = NULL;
-				_map->parent = NULL;
+				_map = NULL;
 				_size = 0;
 				_alloc = alloc;
 				_key_cmp = comp;
 
 				_fake_begin = new node_type();
-				_fake_begin->left = NULL;
-				_fake_begin->right = NULL;
 				_fake_end = _fake_begin;
 
 				_lower = _fake_begin;
@@ -319,10 +328,7 @@ namespace ft
 			template <class InputIt>
 			map(InputIt first, typename ft::enable_if<InputIt::is_iterator, InputIt>::type last, const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type())
 			{
-				_map = new node_type();
-				_map->left = NULL;
-				_map->right = NULL;
-				_map->parent = NULL;
+				_map = NULL;
 				_size = 0;
 				_alloc = alloc;
 				_key_cmp = comp;
@@ -341,69 +347,72 @@ namespace ft
 			map(const map &x)
 			{
 				_map = NULL;
-				_map->left = NULL;
-				_map->right = NULL;
-				_map->parent = NULL;
 				_size = 0;
 				_alloc = allocator_type();
 				_key_cmp = key_compare();
 				
 				_fake_begin = new node_type();
-				_fake_begin->left = NULL;
-				_fake_begin->right = NULL;
 				_fake_end = _fake_begin;
 
-				_lower = _fake_begin; //ou NULL?
-				_upper = _fake_end; //ou NULL?
+				_lower = _fake_begin;
+				_upper = _fake_end;
 
 				*this = x;
 			}
 
 			virtual	~map()
 			{
-				if (empty() == 0)
-					clear();
+				// if (empty() == 0)
+				// 	clear();
 			}
 
 			//ITERATORS
 			iterator				begin()
 			{
-				return	iterator(last_left(_map));
+				// return	iterator(last_left(_map));
+				return	iterator(_lower);
 			}
 
 			const_iterator			begin() const
 			{
-				return	const_iterator(last_left(_map));
+				// return	const_iterator(last_left(_map));
+				return	const_iterator(_lower);
 			}
 
 			iterator				end()
 			{
-				return	iterator(last_right(_map));
+				//return	iterator(last_right(_map));
+				return	iterator(_fake_end);
 			}
 
 			const_iterator			end() const
 			{
-				return	const_iterator(last_right(_map));
+				//return	const_iterator(last_right(_map));
+				return	iterator(_fake_end);
 			}
 
 			reverse_iterator 		rbegin()
 			{
-				return	reverse_iterator(--end());
+				// return	reverse_iterator(--end());
+				return	reverse_iterator(_upper);
 			}
 
 			const_reverse_iterator	rbegin() const
 			{
-				return	const_reverse_iterator(rbegin());
+				// return	const_reverse_iterator(rbegin());
+				return	const_reverse_iterator(_upper);
 			}
 
 			reverse_iterator		rend()
 			{
 				return	reverse_iterator(begin());
+				return	reverse_iterator(_fake_begin);
 			}
 
 			const_reverse_iterator	rend() const
 			{
 				return	const_reverse_iterator(begin());
+				return	const_reverse_iterator(_fake_begin);
 			}
 
 			//CAPACITY
@@ -437,74 +446,63 @@ namespace ft
 			
 			pair<iterator, bool>	insert(const value_type &val)
 			{
-				node_type		*node = _map;
-				node_type		*create = NULL;
+				node_type *tmp = _map;
+				node_type *new_node = _node_alloc.allocate(1);
+				_node_alloc.construct(new_node, node_type());
 
 				if (_size == 0)
 				{
-					_map = new node_type();
-					_map->parent = NULL;
-					_map->value = val;
+					new_node->value = val;
+					_map = new_node;
+					_upper = _map;
 					_lower = _map;
-					_upper = new node_type();
-					_map->right = _upper;
-					_upper->parent = _map;
-					_size++;
-					return (make_pair(iterator(_map), true));
+					_fake_end = new node_type();
+					_upper->right = _fake_end;
+					_lower->left = _fake_begin;
+					_fake_begin->parent = _map;
+					_fake_end->parent = _map;
 				}
-				while (true)
+				else
 				{
-					if (node->value.first == val.first)
+					while(tmp)
 					{
-						node->value.second = val.second;
-						return (make_pair(iterator(node), false));
-					}
-					if (value_comp()(val, node->value))
-					{
-						if (node->left)
-							node = node->left;
-						else
+						if (val.first == tmp->value.first)
 						{
-							create = new node_type();
-							create->value = val;
-							create->right = NULL;
-							create->left = NULL;
-							create->parent = node;
-							if (node->left == _lower)
-								create->left = _lower;
-							node->left = create;
-							break ;
+							return (ft::make_pair(find(tmp->value.first), false));
 						}
-					}
-					else
-					{
-						if (node->right)
-							node = node->right;
+						if (val.first < tmp->value.first)
+						{
+							if (tmp->left == NULL || tmp->left == _fake_begin)
+							{
+								new_node->value = val;
+								tmp->left = new_node;
+								new_node->parent = tmp;
+								set_lower();
+								break ;
+							}
+							tmp = tmp->left;
+						}
 						else
 						{
-							create = new node_type();
-							create->value = val;
-							create->right = NULL;
-							create->left = NULL;
-							create->parent = node;
-							if (node->right == _upper)
-								create->right = _upper;
-							if (node == _upper)
+							if (tmp->right == NULL || tmp->right == _fake_end)
 							{
-								_upper->value = val;
-								_upper->right = create;
-								_upper->parent = node->parent;
-								_upper = create;
+								new_node->value = val;
+								tmp->right = new_node;
+								new_node->parent = tmp;
+								if (new_node->value.first > _upper->value.first)
+								{
+									_upper = new_node;
+									_fake_end->parent = new_node;
+									new_node->right = _fake_end;
+								}
+								break ;
 							}
-							else
-								node->right = create;
-							break ;
+							tmp = tmp->right;
 						}
 					}
 				}
-				set_lower();
 				_size++;
-				return (make_pair(iterator(create), true));
+				return (ft::make_pair(find(new_node->value.first), true));
 			}
 
 			iterator				insert(iterator position, const value_type &val)
@@ -533,8 +531,8 @@ namespace ft
 					return (0);
 				if (tmp)
 				{
-					if ((!tmp->left && !tmp->right) ||
-										(!tmp->left && tmp->right == last_right(_map)))
+					if ((!tmp->left && !tmp->right) || (!tmp->left && tmp->right == _fake_end) ||
+						(!tmp->right && tmp->left == _fake_begin) || (tmp->right == _fake_end && tmp->left == _fake_begin))
 						erase_leaf(tmp);
 					else if ((tmp->left && (!tmp->right || tmp->right == last_right(_map))) ||
 							(tmp->right && tmp->right != last_right(_map) && !tmp->left))
@@ -572,14 +570,15 @@ namespace ft
 
 			void clear()
 			{
-				node_type *right = last_right(_map);
+				// node_type *right = last_right(_map);
 
-				if (_size == 0)
-					return ;
-				right->parent->right = NULL;
-				clear_tree(_map);
-				_map = right;
-				_size = 0;
+				// if (_size == 0)
+				// 	return ;
+				// right->parent->right = NULL;
+				// clear_tree(_map);
+				// _map = right;
+				// _size = 0;
+				erase(this->begin(), this->end());
 			}
 
 			//OBSERVERS
