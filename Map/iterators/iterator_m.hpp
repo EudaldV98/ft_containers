@@ -33,22 +33,22 @@ namespace ft
 
 		private:
 
-			node_type		*_map;
+			node_type		*_ptr;
 
 		public:
 
-			iterator_m(void): _map(NULL)
+			iterator_m(void): _ptr(NULL)
 			{
 			}
 
 			iterator_m(node_type *src)
 			{
-				_map = src;
+				_ptr = src;
 			}
 
 			iterator_m(const iterator_m &src)
 			{
-				_map = src._map;
+				_ptr = src._ptr;
 			}
 
 			virtual	~iterator_m()
@@ -57,7 +57,7 @@ namespace ft
 
 			iterator_m	&operator=(iterator_m const &src)
 			{
-				_map = src._map;
+				_ptr = src._ptr;
 				return	*this;
 			}
 
@@ -66,21 +66,21 @@ namespace ft
 
 			iterator_m	operator++()
 			{
-				if (_map->right != NULL)
+				if (_ptr->right != NULL)
 				{
-					_map = _map->right;
-					while (_map->left != NULL)
-						_map = _map->left;
+					_ptr = _ptr->right;
+					while (_ptr->left != NULL)
+						_ptr = _ptr->left;
 				}
 				else
 				{
-					node_type *tmp = _map;
+					node_type *tmp = _ptr;
 
-					_map = _map->parent;
-					while (_map->parent && _map->right == tmp)
+					_ptr = _ptr->parent;
+					while (_ptr->parent && _ptr->right == tmp)
 					{
-						tmp = _map;
-						_map = _map->parent;
+						tmp = _ptr;
+						_ptr = _ptr->parent;
 					}
 				}
 				return *this;
@@ -96,21 +96,21 @@ namespace ft
 
 			iterator_m	operator--()
 			{
-				if (_map->left != NULL)
+				if (_ptr->left != NULL)
 				{
-					_map = _map->left;
-					while (_map->right != NULL)
-						_map = _map->right;
+					_ptr = _ptr->left;
+					while (_ptr->right != NULL)
+						_ptr = _ptr->right;
 				}
 				else
 				{
-					node_type *tmp = _map;
+					node_type *tmp = _ptr;
 
-					_map = _map->parent;
-					while (_map->parent && _map->left == tmp)
+					_ptr = _ptr->parent;
+					while (_ptr->parent && _ptr->left == tmp)
 					{
-						tmp = _map;
-						_map = _map->parent;
+						tmp = _ptr;
+						_ptr = _ptr->parent;
 					}
 				}
 				return	*this;
@@ -128,39 +128,39 @@ namespace ft
 			//
 			bool	operator==(iterator_m const &src)
 			{
-				return	_map == src._map;
+				return	_ptr == src._ptr;
 			}
 
 			bool	operator!=(iterator_m const &src) const
 			{
-				return	_map != src._map;
+				return	_ptr != src._ptr;
 			}
 
 			//DEFERENCING OPERATORS
 			pointer			operator->()
 			{
-				return	&_map->value;
+				return	_ptr->value;
 			}
 
 			pointer			operator->() const
 			{
-				return &_map->value;
+				return _ptr->value;
 			}
 
 			reference		operator*()
 			{
-				return	_map->value;
+				return	*(_ptr->value);
 			}
 
 			const_reference	operator*() const
 			{
-				return	_map->value;
+				return	*(_ptr->value);
 			}
 
 			//GETTER FNCT
-			node_type		*get_map(void) const
+			node_type		*get_ptr(void) const
 			{
-				return	_map;
+				return	_ptr;
 			}
 	};
 }

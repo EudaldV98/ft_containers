@@ -124,7 +124,7 @@ namespace ft
 
 	//-------- PAIR CLASS --------
 
-	template <typename Tkey, typename Tvalue>
+	template <class Tkey, class Tvalue>
 	class	pair
 	{
 		public:
@@ -132,15 +132,13 @@ namespace ft
 			Tkey	first;
 			Tvalue	second;
 
-			pair(void)
+			pair(void): first(), second()
 			{
 			}
 
 			template <class X, class Y>
-			pair (const pair<X, Y> &p)
+			pair (const pair<X, Y> &p): first(p.first), second(p.second)
 			{
-				this->first = p.first;
-				this->second = p.second;
 			}
 
 			pair(const Tkey &k, const Tvalue &v): first(k), second(v)
@@ -153,8 +151,8 @@ namespace ft
 
 			pair	&operator=(const pair &p)
 			{
-				this->first = p.first;
-				this->second = p.second;				
+				first = p.first;
+				second = p.second;				
 				return	*this;
 			}
 	};

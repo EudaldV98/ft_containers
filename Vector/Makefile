@@ -16,7 +16,7 @@ SRC = 	./tester/tester_vector.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
-CC = clang++
+CXX = clang++
 
 CPPFLAGS = -Wall -Werror -Wextra -std=c++98
 

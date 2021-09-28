@@ -15,7 +15,8 @@
 
 # include   "../../Utils/utils.hpp"
 # include	"./iterator_m.hpp"
-//# include	"../map.hpp"
+# include	"./reverse_iterator_m.hpp"
+# include	"../map.hpp"
 
 namespace ft
 {
@@ -33,27 +34,33 @@ namespace ft
 
 		private:
 
-			const node_type		*_map;
+			node_type		*_ptr;
 		
 		public:
 
-			const_reverse_iterator_m(void): _map(NULL)
+			const_reverse_iterator_m(void)
 			{
+				_ptr = NULL;
 			}
 
 			const_reverse_iterator_m(node_type *src)
 			{
-				_map = src;
+				_ptr = src;
 			}
 
 			const_reverse_iterator_m(const const_reverse_iterator_m &src)
 			{
-				_map = src._map;
+				_ptr = src._ptr;
+			}
+
+			const_reverse_iterator_m(const reverse_iterator_m<T, node_type> &src)
+			{
+				_ptr = src.get_ptr();
 			}
 
 			const_reverse_iterator_m(const iterator_m<T, node_type> &src)
 			{
-				_map = src.get_map();
+				_ptr = src.get_ptr();
 			}
 
 			virtual ~const_reverse_iterator_m()
@@ -62,39 +69,39 @@ namespace ft
 
 			const_reverse_iterator_m	&operator=(const_reverse_iterator_m const &src)
 			{
-				_map = src._map;
+				_ptr = src._ptr;
 				return	*this;
 			}
 
 			//OPERATOR BOOL
 			bool	operator==(const_reverse_iterator_m const &src) const
 			{
-				return	_map == src._map;
+				return	_ptr == src._ptr;
 			}
 
 			bool	operator!=(const_reverse_iterator_m const &src) const
 			{
-				return	_map != src._map;
+				return	_ptr != src._ptr;
 			}
 
 			//OPERATOR ARITHMETICS
 			const_reverse_iterator_m	operator++()
 			{
-				if (_map->left != NULL)
+				if (_ptr->left != NULL)
 				{
-					_map = _map->left;
-					while (_map->right != NULL)
-						_map = _map->right;
+					_ptr = _ptr->left;
+					while (_ptr->right != NULL)
+						_ptr = _ptr->right;
 				}
 				else
 				{
-					node_type	*ptr = _map;
+					node_type	*ptr = _ptr;
 
-					_map = _map->parent;
-					while (_map && ptr == _map->left)
+					_ptr = _ptr->parent;
+					while (_ptr && ptr == _ptr->left)
 					{
-						ptr = _map;
-						_map = _map->parent;
+						ptr = _ptr;
+						_ptr = _ptr->parent;
 					}
 				}
 				return *this;
@@ -109,21 +116,21 @@ namespace ft
 
 			const_reverse_iterator_m	operator--()
 			{
-				if (_map->right != NULL)
+				if (_ptr->right != NULL)
 				{
-					_map = _map->right;
-					while (_map->left != NULL)
-						_map = _map->left;
+					_ptr = _ptr->right;
+					while (_ptr->left != NULL)
+						_ptr = _ptr->left;
 				}
 				else
 				{
-					node_type	*ptr = _map;
+					node_type	*ptr = _ptr;
 
-					_map = _map->parent;
-					while (_map->right == ptr)
+					_ptr = _ptr->parent;
+					while (_ptr->right == ptr)
 					{
-						ptr = _map;
-						_map = _map->parent;
+						ptr = _ptr;
+						_ptr = _ptr->parent;
 					}
 				}
 				return	*this;
@@ -140,17 +147,17 @@ namespace ft
 			//DEFERENCING OPERATORS
 			reference		operator*()
 			{
-				return	_map->value;
+				return	*(_ptr->value);
 			}
 
 			const_reference	operator*() const
 			{
-				return	_map->value;
+				return	*(_ptr->value);
 			}
 
 			pointer			operator->()
 			{
-				return	&_map->value;
+				return	_ptr->value;
 			}
 	};
 }

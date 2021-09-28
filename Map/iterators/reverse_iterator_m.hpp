@@ -33,27 +33,27 @@ namespace ft
 
 		private:
 
-			node_type	*_map;
+			node_type	*_ptr;
 		
 		public:
 
-			reverse_iterator_m(void): _map(NULL)
+			reverse_iterator_m(void): _ptr(NULL)
 			{
 			}
 
 			reverse_iterator_m(node_type *src)
 			{
-				_map = src;
+				_ptr = src;
 			}
 
 			reverse_iterator_m(const reverse_iterator_m &src)
 			{
-				_map = src._map;
+				_ptr = src._ptr;
 			}
 
 			reverse_iterator_m(const iterator_m<T, node_type> &src)
 			{
-				_map = src.get_map();
+				_ptr = src.get_ptr();
 			}
 
 			virtual ~reverse_iterator_m()
@@ -62,39 +62,39 @@ namespace ft
 
 			reverse_iterator_m	&operator=(reverse_iterator_m const &src)
 			{
-				_map = src._map;
+				_ptr = src._ptr;
 				return	*this;
 			}
 
 			//OPERATOR BOOL
 			bool	operator==(reverse_iterator_m const &src) const
 			{
-				return	_map == src._map;
+				return	_ptr == src._ptr;
 			}
 
 			bool	operator!=(reverse_iterator_m const &src) const
 			{
-				return	_map != src._map;
+				return	_ptr != src._ptr;
 			}
 
 			//OPERATOR ARITHMETICS
 			reverse_iterator_m	operator++()
 			{
-				if (_map->left != NULL)
+				if (_ptr->left != NULL)
 				{
-					_map = _map->left;
-					while (_map->right != NULL)
-						_map = _map->right;
+					_ptr = _ptr->left;
+					while (_ptr->right != NULL)
+						_ptr = _ptr->right;
 				}
 				else
 				{
-					node_type	*ptr = _map;
+					node_type	*ptr = _ptr;
 
-					_map = _map->parent;
-					while (_map && ptr == _map->left)
+					_ptr = _ptr->parent;
+					while (_ptr && ptr == _ptr->left)
 					{
-						ptr = _map;
-						_map = _map->parent;
+						ptr = _ptr;
+						_ptr = _ptr->parent;
 					}
 				}
 				return *this;
@@ -110,21 +110,21 @@ namespace ft
 
 			reverse_iterator_m	operator--()
 			{
-				if (_map->right != NULL)
+				if (_ptr->right != NULL)
 				{
-					_map = _map->right;
-					while (_map->left != NULL)
-						_map = _map->left;
+					_ptr = _ptr->right;
+					while (_ptr->left != NULL)
+						_ptr = _ptr->left;
 				}
 				else
 				{
-					node_type	*child = _map;
+					node_type	*child = _ptr;
 
-					_map = _map->parent;
-					while (_map->right == child)
+					_ptr = _ptr->parent;
+					while (_ptr->right == child)
 					{
-						child = _map;
-						_map = _map->parent;
+						child = _ptr;
+						_ptr = _ptr->parent;
 					}
 				}
 				return	*this;
@@ -141,22 +141,27 @@ namespace ft
 			//DEFERENCING OPERATORS
 			reference		operator*()
 			{
-				return	_map->value;
+				return	*(_ptr->value);
 			}
 
 			const_reference	operator*() const
 			{
-				return	_map->value;
+				return	*(_ptr->value);
 			}
 
 			pointer			operator->()
 			{
-				return	&_map->value;
+				return	_ptr->value;
 			}
 
 			pointer			operator->() const
 			{
-				return	&_map->value;
+				return	_ptr->value;
+			}
+
+			node_type		*get_ptr(void) const
+			{
+				return	_ptr;
 			}
 
 	};

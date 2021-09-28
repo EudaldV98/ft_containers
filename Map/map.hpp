@@ -31,14 +31,22 @@ struct node
 		node		*parent;
 		node		*left;
 		node		*right;
-		value_type	value;
+		value_type	*value;
 
 		node(void)
 		{
 			parent = NULL;
 			left = NULL;
 			right = NULL;
-			//value = NULL;
+			value = NULL;
+		}
+
+		node(value_type *val)
+		{
+			value = val;
+			parent = NULL;
+			left = NULL;
+			right = NULL;
 		}
 };
 
@@ -87,7 +95,7 @@ namespace ft
 
 			typedef Tkey												key_type;
 			typedef Tvalue												map_value;
-			typedef ft::pair<key_type, map_value>						value_type;
+			typedef ft::pair<const key_type, map_value>					value_type;
 			typedef node<value_type>									node_type;
 			typedef Compare												key_compare;
 			typedef std::allocator<value_type>							allocator_type;
@@ -147,17 +155,13 @@ namespace ft
 			node_type		*find_node(key_type key)
 			{
 				node_type	*tmp = _map;
-				value_type	val;
-
-				val.first = key;
-				val.second = 0;
 				if (_size == 0)
 					return (NULL);
 				while (true)
 				{
-					if (tmp->value.first == val.first)
+					if (tmp->value->first == key)
 						return (tmp);
-					if (value_comp()(val, tmp->value))
+					if (key < tmp->value->first)
 					{
 						if (tmp->left)
 							tmp = tmp->left;
@@ -205,62 +209,66 @@ namespace ft
 
 			void		erase_single(node_type *node)
 			{
-				if (node->left && (!node->right || node->right == last_right(_map)))
+				node_type *replace;
+			
+				if (node->right && node->right != _fake_end)
+					replace = node->right;
+				else if (node->left && node->left != _fake_begin)
+					replace = node->left;
+				if (node == _map)
 				{
-					if (node->parent && value_comp()(node->value, node->parent->value))
-						node->parent->left = node->left;
-					else if (node->parent)
-						node->parent->right = node->left;
-					if (_map == node)
-					{
-						_map = node->left;
-						node->left->parent = NULL;
-					}
-					else
-						node->left->parent = node->parent;
+					_map = replace;
+					// if (replace == node->right)
+					// 	_upper = _map;
+					// else
+					// 	_lower = _map;
+					//set_lower();
 				}
-				else if (node->right && node->right != last_right(_map) && !node->left)
+				else
 				{
-					if (node->parent && value_comp()(node->value, node->parent->value))
-						node->parent->left = node->right;
-					else if (node->parent)
-						node->parent->right = node->right;
-					node->right->parent = node->parent;
-					if (node == _map)
-						_map = node->right;
+					// if (node == _lower)
+					// 	_lower = node->parent;
+					// if (node == _upper)
+					// 	_upper = node->parent;
+					if (node == node->parent->right)
+						node->parent->right = replace;
+					if (node == node->parent->left)
+						node->parent->left = replace;
 				}
+				replace->parent = node->parent;
 				delete node;
 				node = NULL;
-				set_upper();
 				set_lower();
+				set_upper();
 				_size--;
 			}
 
 			void		erase_double(node_type *node)
 			{
-				node_type *near = node;
+				node_type *next = node;
 				node_type *tmp;
 
-				near = near->left;
-				while (near->right)
-					near = near->right;
+				if (next->left && next->left != _fake_begin)
+					next = next->left;
+				while (next->right && next->right != _fake_end)
+					next = next->right;
 				if (node->parent)
 				{
-					if (value_comp()(node->value, node->parent->value))
-						node->parent->left = near;
+					if (node->parent && node->parent->left == node)
+						node->parent->left = next;
 					else
-						node->parent->right = near;
-					near->parent = node->parent;
+						node->parent->right = next;
+					next->parent = node->parent;
 					node->parent = NULL;
 				}
-				near->right = node->right;
-				near->right->parent = near;
+				next->right = node->right;
+				next->right->parent = next;
 				node->right = NULL;
-				if (near->parent->value.first != node->value.first)
+				if (next->parent->value->first != node->value->first)
 				{
-					if (near->left)
+					if (next->left && next->left != _fake_begin)
 					{
-						tmp = near->left;
+						tmp = next->left;
 						while (tmp->left)
 							tmp = tmp->left;
 						tmp->left = node->right;
@@ -269,11 +277,13 @@ namespace ft
 				}
 				if (node == _map)
 				{
-					_map = near;
-					near->parent = NULL;
+					_map = next;
+					next->parent = NULL;
 				}
 				delete node;
 				node = NULL;
+				set_upper();
+				set_lower();
 				_size--;
 			}
 
@@ -284,9 +294,9 @@ namespace ft
 				while (node->right && node->right != _fake_end)
 					node = node->right;
 				_upper = node;
-
 				if (_upper != _fake_end->parent)
 				{
+					
 					_upper->right = _fake_end;
 					_fake_end->parent = _upper;
 				}
@@ -318,7 +328,8 @@ namespace ft
 				_alloc = alloc;
 				_key_cmp = comp;
 
-				_fake_begin = new node_type();
+				_fake_begin = _node_alloc.allocate(1);
+				_node_alloc.construct(_fake_begin, node_type());
 				_fake_end = _fake_begin;
 
 				_lower = _fake_begin;
@@ -351,7 +362,8 @@ namespace ft
 				_alloc = allocator_type();
 				_key_cmp = key_compare();
 				
-				_fake_begin = new node_type();
+				_fake_begin = _node_alloc.allocate(1);
+				_node_alloc.construct(_fake_begin, node_type());
 				_fake_end = _fake_begin;
 
 				_lower = _fake_begin;
@@ -369,49 +381,41 @@ namespace ft
 			//ITERATORS
 			iterator				begin()
 			{
-				// return	iterator(last_left(_map));
 				return	iterator(_lower);
 			}
 
 			const_iterator			begin() const
 			{
-				// return	const_iterator(last_left(_map));
 				return	const_iterator(_lower);
 			}
 
 			iterator				end()
 			{
-				//return	iterator(last_right(_map));
 				return	iterator(_fake_end);
 			}
 
 			const_iterator			end() const
 			{
-				//return	const_iterator(last_right(_map));
-				return	iterator(_fake_end);
+				return	const_iterator(_fake_end);
 			}
 
 			reverse_iterator 		rbegin()
 			{
-				// return	reverse_iterator(--end());
 				return	reverse_iterator(_upper);
 			}
 
 			const_reverse_iterator	rbegin() const
 			{
-				// return	const_reverse_iterator(rbegin());
 				return	const_reverse_iterator(_upper);
 			}
 
 			reverse_iterator		rend()
 			{
-				return	reverse_iterator(begin());
 				return	reverse_iterator(_fake_begin);
 			}
 
 			const_reverse_iterator	rend() const
 			{
-				return	const_reverse_iterator(begin());
 				return	const_reverse_iterator(_fake_begin);
 			}
 
@@ -446,63 +450,77 @@ namespace ft
 			
 			pair<iterator, bool>	insert(const value_type &val)
 			{
-				node_type *tmp = _map;
-				node_type *new_node = _node_alloc.allocate(1);
-				_node_alloc.construct(new_node, node_type());
+				// node_type *new_node = _node_alloc.allocate(1);
+				// _node_alloc.construct(new_node, node_type());
 
+				node_type *tmp = _map;
 				if (_size == 0)
 				{
-					new_node->value = val;
+					value_type *value = _alloc.allocate(1);
+					_alloc.construct(value, val);
+					node_type *new_node = _node_alloc.allocate(1);
+					_node_alloc.construct(new_node, value);
 					_map = new_node;
 					_upper = _map;
 					_lower = _map;
-					_fake_end = new node_type();
+					_fake_end = _node_alloc.allocate(1);
+					_node_alloc.construct(_fake_end, node_type());
 					_upper->right = _fake_end;
 					_lower->left = _fake_begin;
 					_fake_begin->parent = _map;
 					_fake_end->parent = _map;
+					_size++;
+					return (ft::make_pair(find(new_node->value->first), true));
 				}
 				else
 				{
-					while(tmp)
+					while(1)
 					{
-						if (val.first == tmp->value.first)
+						if (val.first == tmp->value->first)
 						{
-							return (ft::make_pair(find(tmp->value.first), false));
+							return (ft::make_pair(find(tmp->value->first), false));
 						}
-						if (val.first < tmp->value.first)
+						if (val.first < tmp->value->first)
 						{
 							if (tmp->left == NULL || tmp->left == _fake_begin)
 							{
-								new_node->value = val;
+								value_type *value = _alloc.allocate(1);
+								_alloc.construct(value, val);
+								node_type *new_node = _node_alloc.allocate(1);
+								_node_alloc.construct(new_node, value);
 								tmp->left = new_node;
 								new_node->parent = tmp;
 								set_lower();
-								break ;
+								_size++;
+								return (ft::make_pair(find(new_node->value->first), true));
 							}
 							tmp = tmp->left;
 						}
-						else
+						else if (val.first > tmp->value->first)
 						{
 							if (tmp->right == NULL || tmp->right == _fake_end)
 							{
-								new_node->value = val;
+								value_type *value = _alloc.allocate(1);
+								_alloc.construct(value, val);
+								node_type *new_node = _node_alloc.allocate(1);
+								_node_alloc.construct(new_node, value);
 								tmp->right = new_node;
 								new_node->parent = tmp;
-								if (new_node->value.first > _upper->value.first)
+								if (new_node->value->first > _upper->value->first)
 								{
 									_upper = new_node;
 									_fake_end->parent = new_node;
 									new_node->right = _fake_end;
 								}
-								break ;
+								_size++;
+								return (ft::make_pair(find(new_node->value->first), true));
 							}
 							tmp = tmp->right;
 						}
+						else
+							return (ft::make_pair(iterator(tmp), false));
 					}
 				}
-				_size++;
-				return (ft::make_pair(find(new_node->value.first), true));
 			}
 
 			iterator				insert(iterator position, const value_type &val)
@@ -534,10 +552,10 @@ namespace ft
 					if ((!tmp->left && !tmp->right) || (!tmp->left && tmp->right == _fake_end) ||
 						(!tmp->right && tmp->left == _fake_begin) || (tmp->right == _fake_end && tmp->left == _fake_begin))
 						erase_leaf(tmp);
-					else if ((tmp->left && (!tmp->right || tmp->right == last_right(_map))) ||
-							(tmp->right && tmp->right != last_right(_map) && !tmp->left))
+					else if ((tmp->left && (!tmp->right || tmp->right == _fake_end)) ||
+							(tmp->right && (!tmp->left || tmp->left == _fake_begin)))
 						erase_single(tmp);
-					else
+					else if (tmp->right && tmp->left)
 						erase_double(tmp);
 				}
 				return (_size);
@@ -633,7 +651,7 @@ namespace ft
 
 				while (it != it_end)
 				{
-					if (!_key_cmp((*it).first, k) && !_key_cmp(k, (*it).first))
+					if (!_key_cmp((*it)->first, k) && !_key_cmp(k, (*it)->first))
 						break ;
 					it++;
 				}
@@ -707,7 +725,7 @@ namespace ft
 
 				while (it != it_end)
 				{
-					if (!_key_cmp(k, (*it).first))
+					if (!_key_cmp(k, (*it)->first))
 						break ;
 					it++;
 				}
@@ -730,6 +748,12 @@ namespace ft
 				ret.first = lower_bound(k);
 				ret.second = upper_bound(k);
 				return ret;
+			}
+
+			//ALLOCATOR
+			allocator_type get_allocator() const
+			{
+				return	_alloc;
 			}
 	};
 }
