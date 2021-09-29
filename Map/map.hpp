@@ -118,25 +118,14 @@ namespace ft
 		private:
 
 			node<value_type>	*_map;
-			public:
 			node<value_type>	*_upper;
 			node<value_type>	*_lower;
 			node<value_type>	*_fake_begin;
 			node<value_type>	*_fake_end;
-			private:
 			size_type			_size;
 			allocator_type		_alloc;
 			nodeAlloc			_node_alloc;
-			key_compare			_key_cmp;
-
-			void	clear_tree(node_type *m)
-			{
-				if (m == NULL)
-					return ;
-				clear_tree(m->left);
-				clear_tree(m->right);
-				delete m;
-			}
+			key_compare			_comp;
 
 			void	copy_tree(map &m)
 			{
@@ -146,7 +135,7 @@ namespace ft
 				_map = m._map;
 				_size = m._size;
 				_alloc = m._alloc;
-				_key_cmp = m._key_cmp;
+				_comp = m._comp;
 				m._map = tmp;
 				m._size = 0;
 				tmp = NULL;
@@ -183,10 +172,14 @@ namespace ft
 			{
 				if (_size == 1)
 				{
-					delete leaf;
-					leaf = NULL;
+					_alloc.destroy(leaf->value);
+					_alloc.deallocate(leaf->value, 1);
+					_node_alloc.destroy(leaf);
+					_node_alloc.deallocate(leaf, 1);
+					//leaf = NULL;
 					_map = NULL;
-					delete _fake_end;
+					_node_alloc.destroy(_fake_end);
+					_node_alloc.deallocate(_fake_end, 1);
 					_fake_end = _fake_begin;
 					_fake_begin->parent = NULL;
 					_upper = _fake_begin;
@@ -200,8 +193,10 @@ namespace ft
 				{
 					leaf->parent->right = NULL;
 				}
-				delete leaf;
-				leaf = NULL;
+				_alloc.destroy(leaf->value);
+				_alloc.deallocate(leaf->value, 1);
+				_node_alloc.destroy(leaf);
+				_node_alloc.deallocate(leaf, 1);
 				set_upper();
 				set_lower();
 				_size--;
@@ -218,26 +213,19 @@ namespace ft
 				if (node == _map)
 				{
 					_map = replace;
-					// if (replace == node->right)
-					// 	_upper = _map;
-					// else
-					// 	_lower = _map;
-					//set_lower();
 				}
 				else
 				{
-					// if (node == _lower)
-					// 	_lower = node->parent;
-					// if (node == _upper)
-					// 	_upper = node->parent;
 					if (node == node->parent->right)
 						node->parent->right = replace;
 					if (node == node->parent->left)
 						node->parent->left = replace;
 				}
 				replace->parent = node->parent;
-				delete node;
-				node = NULL;
+				_alloc.destroy(node->value);
+				_alloc.deallocate(node->value, 1);
+				_node_alloc.destroy(node);
+				_node_alloc.deallocate(node, 1);
 				set_lower();
 				set_upper();
 				_size--;
@@ -246,7 +234,6 @@ namespace ft
 			void		erase_double(node_type *node)
 			{
 				node_type *next = node;
-				node_type *tmp;
 
 				if (next->left && next->left != _fake_begin)
 					next = next->left;
@@ -258,30 +245,37 @@ namespace ft
 						node->parent->left = next;
 					else
 						node->parent->right = next;
-					next->parent = node->parent;
-					node->parent = NULL;
 				}
 				next->right = node->right;
 				next->right->parent = next;
 				node->right = NULL;
 				if (next->parent->value->first != node->value->first)
 				{
-					if (next->left && next->left != _fake_begin)
+					if (next->parent->right == next)
 					{
+						node_type *tmp;
 						tmp = next->left;
-						while (tmp->left)
-							tmp = tmp->left;
-						tmp->left = node->right;
-						node->left->parent = tmp;
+						next->parent->right = tmp;
+						if (tmp && tmp != _fake_begin)
+							tmp->parent = next->parent;
 					}
 				}
+				if (node->left != next)
+				{
+					next->left = node->left;
+					next->left->parent = next;
+				}
+				next->parent = node->parent;
+				node->parent = NULL;
 				if (node == _map)
 				{
 					_map = next;
 					next->parent = NULL;
 				}
-				delete node;
-				node = NULL;
+				_alloc.destroy(node->value);
+				_alloc.deallocate(node->value, 1);
+				_node_alloc.destroy(node);
+				_node_alloc.deallocate(node, 1);
 				set_upper();
 				set_lower();
 				_size--;
@@ -326,7 +320,7 @@ namespace ft
 				_map = NULL;
 				_size = 0;
 				_alloc = alloc;
-				_key_cmp = comp;
+				_comp = comp;
 
 				_fake_begin = _node_alloc.allocate(1);
 				_node_alloc.construct(_fake_begin, node_type());
@@ -342,7 +336,7 @@ namespace ft
 				_map = NULL;
 				_size = 0;
 				_alloc = alloc;
-				_key_cmp = comp;
+				_comp = comp;
 				insert(first, last);
 			}
 
@@ -360,7 +354,7 @@ namespace ft
 				_map = NULL;
 				_size = 0;
 				_alloc = allocator_type();
-				_key_cmp = key_compare();
+				_comp = key_compare();
 				
 				_fake_begin = _node_alloc.allocate(1);
 				_node_alloc.construct(_fake_begin, node_type());
@@ -374,8 +368,8 @@ namespace ft
 
 			virtual	~map()
 			{
-				// if (empty() == 0)
-				// 	clear();
+				if (empty() == 0)
+					clear();
 			}
 
 			//ITERATORS
@@ -450,15 +444,13 @@ namespace ft
 			
 			pair<iterator, bool>	insert(const value_type &val)
 			{
-				// node_type *new_node = _node_alloc.allocate(1);
-				// _node_alloc.construct(new_node, node_type());
+				node_type *new_node = _node_alloc.allocate(1);
 
 				node_type *tmp = _map;
 				if (_size == 0)
 				{
 					value_type *value = _alloc.allocate(1);
 					_alloc.construct(value, val);
-					node_type *new_node = _node_alloc.allocate(1);
 					_node_alloc.construct(new_node, value);
 					_map = new_node;
 					_upper = _map;
@@ -486,23 +478,21 @@ namespace ft
 							{
 								value_type *value = _alloc.allocate(1);
 								_alloc.construct(value, val);
-								node_type *new_node = _node_alloc.allocate(1);
 								_node_alloc.construct(new_node, value);
 								tmp->left = new_node;
 								new_node->parent = tmp;
 								set_lower();
 								_size++;
-								return (ft::make_pair(find(new_node->value->first), true));
+								break ;
 							}
 							tmp = tmp->left;
 						}
-						else if (val.first > tmp->value->first)
+						else
 						{
 							if (tmp->right == NULL || tmp->right == _fake_end)
 							{
 								value_type *value = _alloc.allocate(1);
 								_alloc.construct(value, val);
-								node_type *new_node = _node_alloc.allocate(1);
 								_node_alloc.construct(new_node, value);
 								tmp->right = new_node;
 								new_node->parent = tmp;
@@ -513,14 +503,13 @@ namespace ft
 									new_node->right = _fake_end;
 								}
 								_size++;
-								return (ft::make_pair(find(new_node->value->first), true));
+								break ;
 							}
 							tmp = tmp->right;
 						}
-						else
-							return (ft::make_pair(iterator(tmp), false));
 					}
 				}
+				return (ft::make_pair(find(new_node->value->first), true));
 			}
 
 			iterator				insert(iterator position, const value_type &val)
@@ -570,8 +559,9 @@ namespace ft
 
 			void erase (iterator first, iterator last)
 			{
-				for (iterator tmp = first; first != last; tmp++)
+				for (iterator tmp = first; first != last; )
 				{
+					tmp++;
 					erase(first);
 					first = tmp;
 				}
@@ -588,24 +578,11 @@ namespace ft
 
 			void clear()
 			{
-				// node_type *right = last_right(_map);
-
-				// if (_size == 0)
-				// 	return ;
-				// right->parent->right = NULL;
-				// clear_tree(_map);
-				// _map = right;
-				// _size = 0;
 				erase(this->begin(), this->end());
 			}
 
 			//OBSERVERS
-			key_compare key_comp() const
-			{
-				return key_compare();
-			}
-
-			class value_compare
+			class value_compare : public std::binary_function<value_type, value_type, bool>
 			{
 				public:
 					Compare comp;
@@ -626,7 +603,12 @@ namespace ft
 
 			value_compare value_comp() const
 			{
-				return value_compare(key_compare());
+				return value_compare(_comp);
+			}
+
+			key_compare key_comp() const
+			{
+				return _comp;
 			}
 
 			//MAP_OPERATIONS
@@ -637,7 +619,7 @@ namespace ft
 
 				while (it != it_end)
 				{
-					if (!_key_cmp((*it).first, k) && !_key_cmp(k, (*it).first))
+					if (!_comp((*it).first, k) && !_comp(k, (*it).first))
 						break ;
 					it++;
 				}
@@ -651,7 +633,7 @@ namespace ft
 
 				while (it != it_end)
 				{
-					if (!_key_cmp((*it)->first, k) && !_key_cmp(k, (*it)->first))
+					if (!_comp((*it)->first, k) && !_comp(k, (*it)->first))
 						break ;
 					it++;
 				}
@@ -666,7 +648,7 @@ namespace ft
 
 				while (it != it_end)
 				{
-					if (!_key_cmp((*it).first, k) && !_key_cmp(k, (*it).first))
+					if (!_comp((*it).first, k) && !_comp(k, (*it).first))
 					{
 						ret++;
 						break ;						
@@ -678,58 +660,74 @@ namespace ft
 
 			iterator lower_bound(const key_type &k)
 			{
-				iterator it = begin();
-				iterator it_end = end();
+				node_type *tmp = _map;
+				node_type *res = this->end()._ptr;
 
-				while (it != it_end)
+				while (tmp != NULL && tmp != _fake_begin && tmp != _fake_end)
 				{
-					if (!_key_cmp((*it).first, k))
-						break ;
-					it++;
+					if (tmp->value->first < k)
+					{
+						res = tmp;
+						tmp = tmp->left;
+					}
+					else
+						tmp = tmp->right;
 				}
-				return it;
+				return iterator(res);
 			}
 
 			iterator lower_bound(const key_type &k) const
 			{
-				const_iterator it = begin();
-				const_iterator it_end = end();
+				node_type *tmp = _map;
+				node_type *res = this->end()._ptr;
 
-				while (it != it_end)
+				while (tmp != NULL && tmp != _fake_begin && tmp != _fake_end)
 				{
-					if (!_key_cmp((*it).first, k))
-						break ;
-					it++;
+					if (tmp->value->first < k)
+					{
+						res = tmp;
+						tmp = tmp->left;
+					}
+					else
+						tmp = tmp->right;
 				}
-				return it;
+				return iterator(res);
 			}
 
 			iterator upper_bound(const key_type &k)
 			{
-				iterator it = begin();
-				iterator it_end = end();
+				node_type *tmp = _map;
+				node_type *res = this->end()._ptr;
 
-				while (it != it_end)
+				while (tmp != NULL && tmp != _fake_begin && tmp != _fake_end)
 				{
-					if (!_key_cmp(k, (*it).first))
-						break ;
-					it++;
+					if (tmp->value->first > k)
+					{
+						res = tmp;
+						tmp = tmp->left;
+					}
+					else
+						tmp = tmp->right;
 				}
-				return it;
+				return iterator(res);
 			}
 
 			iterator upper_bound(const key_type &k) const
 			{
-				iterator it = begin();
-				iterator it_end = end();
+				node_type *tmp = _map;
+				node_type *res = this->end()._ptr;
 
-				while (it != it_end)
+				while (tmp != NULL && tmp != _fake_begin && tmp != _fake_end)
 				{
-					if (!_key_cmp(k, (*it)->first))
-						break ;
-					it++;
+					if (tmp->value->first > k)
+					{
+						res = tmp;
+						tmp = tmp->left;
+					}
+					else
+						tmp = tmp->right;
 				}
-				return it;
+				return iterator(res);
 			}
 
 			pair<iterator, iterator> equal_range(const key_type &k)

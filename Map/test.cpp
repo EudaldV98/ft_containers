@@ -98,6 +98,7 @@ int main ()
 		{
 			std::cout << "[" << it->first << "] = " << it->second << std::endl;
 		}
+		// return 0;
 	}
 
 	{
@@ -213,7 +214,8 @@ int main ()
 
 		itlow = map.lower_bound('b');
 		itup = map.upper_bound('d');
-
+		std::cout << "Erase lower_bound(b) && upper_bound(d)" << std::endl;
+		std::cout << "Values: " << itlow->first << " | " << itup->first << std::endl;
 		map.erase(itlow,itup);
 		for (ft::map<char,int>::iterator it = map.begin(); it != map.end(); ++it)
 			std::cout << it->first << " => " << it->second << '\n';

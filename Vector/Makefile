@@ -23,10 +23,10 @@ CPPFLAGS = -Wall -Werror -Wextra -std=c++98
 all : $(NAME)
 
 $(NAME) :	$(OBJ)
-			$(CC) $(CFLAGS) -o $(NAME) $(OBJ)
+			$(CXX) $(CFLAGS) -o $(NAME) $(OBJ)
 
 sanitize : 	$(OBJ)
-			$(CC) -o $(NAME) -fsanitize=address $(CPPFLAGS) $(OBJ)
+			$(CXX) -o $(NAME) -fsanitize=address $(CPPFLAGS) $(OBJ)
 
 clean :
 			rm -rf $(OBJ)

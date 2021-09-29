@@ -31,7 +31,7 @@ namespace ft
 			typedef	value_type						*pointer;
 			typedef	std::ptrdiff_t					difference_type;
 
-		private:
+		public:
 
 			node_type		*_ptr;
 
