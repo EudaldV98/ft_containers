@@ -51,7 +51,6 @@ int main(int argc, const char *argv[])
 
 	std::cout << "Lst2 = lst\n";
 	lst2 = lst;
-    std::cout << "LOOOL" << std::endl;
 	for (MODE::vector<int>::iterator it = lst.begin(); it != lst.end(); it++)
 		std::cout << *it << " ";
 	std::cout << std::endl;
@@ -79,7 +78,6 @@ int main(int argc, const char *argv[])
 	lst.insert(ite, 3, 1);
 
 
-	//MODE::vector<int>::iterator		test = lst.begin();
 	for (MODE::vector<int>::iterator it = lst.begin(); it != lst.end(); it++)
 		std::cout << *it << " ";
 	std::cout << std::endl;

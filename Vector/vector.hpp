@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 12:36:35 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/24 15:19:13 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/09/30 23:16:26 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ namespace ft
 					_size_alloc = x.size();
 				}
 				for (size_type i = 0; i < x._size; i++)
-					push_back(x[i]);
+					this->push_back(x[i]);
 				return *this;
 			}
 
@@ -395,7 +395,7 @@ namespace ft
 			{
 				if (_size > 0)
 				{
-					for (size_type i = 0; i < _size; _size++)
+					for (size_type i = 0; i < _size; i++)
 						_alloc.destroy(&_array[i]);
 					_size = 0;
 				}
