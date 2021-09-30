@@ -99,7 +99,7 @@ namespace ft
 			typedef node<value_type>									node_type;
 			typedef Compare												key_compare;
 			typedef std::allocator<value_type>							allocator_type;
-			typedef std::allocator<node_type> 								nodeAlloc;
+			typedef std::allocator<node_type> 							nodeAlloc;
 			typedef typename Alloc::template rebind<node_type>::other	new_alloc;
 
 			typedef value_type							&reference;
@@ -466,11 +466,14 @@ namespace ft
 				}
 				else
 				{
-					while(1)
+					while(tmp)
 					{
 						if (val.first == tmp->value->first)
 						{
-							return (ft::make_pair(find(tmp->value->first), false));
+							// value_type *value = _alloc.allocate(1);
+							// _alloc.construct(value, val);
+							// _node_alloc.construct(new_node, value);
+							return (ft::make_pair(iterator(tmp), false));
 						}
 						if (val.first < tmp->value->first)
 						{

@@ -27,6 +27,8 @@ namespace ft
 			typedef	typename vector<T>::size_type	size_type;
 			typedef Container	container_type;
 
+		protected:
+
 			container_type c;
 
 		public:

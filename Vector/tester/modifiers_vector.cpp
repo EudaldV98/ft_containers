@@ -15,6 +15,7 @@
 
 void	ft_modifiers_vector()
 {
+	std::cout << "LOLOLOLOLOLOLOLOLOL" << std::endl;
 	std::cout << ft_vector << std::endl;
 	// tester [] | at | front | back 
 	// FT_VECTOR
@@ -160,7 +161,6 @@ void	std_modifiers_vector()
 {
 	// tester [] | at | front | back 
 	// std_VECTOR
-	
 	std::vector<int>				vec1(4,42);
 	std::cout << COLOR_CYAN << "Test std::vector assign | push_back | pop_back | insert \
 	| erase | swap | clear" << COLOR_RESET << std::endl << std::endl;

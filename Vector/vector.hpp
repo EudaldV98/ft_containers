@@ -94,19 +94,15 @@ namespace ft
 			{
 				_array = _alloc.allocate(std::abs(last - first));
 				_size_alloc = std::abs(last - first);
-				while (first != last)
-				{
+				for ( ; first != last; ++first)
 					push_back(*first);
-					first++;
-				}
 			}
 
 			//DESTRUCTOR
 			~vector()
 			{
 				clear();
-				if (_size_alloc > 0)
-					_alloc.deallocate(_array, _size_alloc);
+				_alloc.deallocate(_array, _size_alloc);
 				_size_alloc = 0;
 			}
 
@@ -134,17 +130,12 @@ namespace ft
 					_array = _alloc.allocate(std::abs(last - first));
 					_size_alloc = std::abs(last - first);
 				}
-				while (first != last)
-				{
+				for ( ; first != last; ++first)
 					push_back(*first);
-					first++;
-				}
 			}
 
 			void			assign(size_type n, const value_type &val)
 			{
-				value_type value = val;
-
 				clear();
 				if (n > _size_alloc)
 				{
@@ -153,7 +144,7 @@ namespace ft
 					_size_alloc = n;
 				}
 				for (size_type i = 0; i < n; ++i)
-					push_back(value);
+					push_back(val);
 			}
 
 
@@ -215,6 +206,7 @@ namespace ft
 					push_back(val);
 				while (_size < n)
 					pop_back();
+				_size = n;
 			}
 
 			size_type		capacity() const
@@ -333,7 +325,7 @@ namespace ft
 						reserve(_size + n);
 				}
 				position = this->begin() + diff;
-				for (iterator it = this->end() + n - 1; it != position + n - 1; it--)
+				for (iterator it = this->end() + n - 1; it != position + n - 1; --it)
 				{
 					this->_swap(*it, *(it - n));
 				}
@@ -350,21 +342,22 @@ namespace ft
 			{
 				if (std::abs(last - first) < 0)
 					return ;
-				size_type x = std::abs(last - first);
+				size_type n = std::abs(last - first);
 				difference_type diff = position - this->begin();
-				if (_size + x > _size_alloc)
+
+				if (_size + n > _size_alloc)
 				{
-					if (_size + x > _size_alloc * 2)
+					if (_size + n > _size_alloc * 2)
 						reserve(_size_alloc * 2);
 					else
-						reserve(_size + x);
+						reserve(_size + n);
 				}
 				position = this->begin() + diff;
-				for (iterator it = this->end() + x - 1; it != position + x - 1; it--)
+				for (iterator it = this->end() + n - 1; it != position + n - 1; --it)
 				{
-					this->swap(*it, *(it - x));
+					this->_swap(*it, *(it - n));
 				}
-				while (x-- != 0)
+				while (n-- != 0)
 				{
 					_alloc.construct(position, *first);
 					_size++;
@@ -378,13 +371,10 @@ namespace ft
 				iterator it = position;
 
 				_alloc.destroy(position);
-				while (it + 1 != this->end())
-				{
-					this->_swap(*it, *(it + 1));
-					it++;
-				}
+				for ( ; position != this->end() - 1; ++position)
+					this->_swap(*position, *(position + 1));
 				_size--;
-				return	position;
+				return	it;
 			}
 
 			iterator		erase(iterator first, iterator last)
@@ -411,6 +401,11 @@ namespace ft
 				}
 			}
 			
+			allocator_type get_allocator() const
+			{
+				return _alloc;
+			}
+
 		};
 		
 		template <class T, class Alloc>
@@ -433,38 +428,21 @@ namespace ft
 		}
 
 		template <class T, class Alloc>
-		bool operator< (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+		bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 		{
-			typename vector<T, Alloc>::iterator it1 = lhs.begin(); 
-			typename vector<T, Alloc>::iterator ite1 = lhs.end();
-
-			typename vector<T, Alloc>::iterator it2 = rhs.begin();
-			typename vector<T, Alloc>::iterator ite2 = rhs.end();
-
-			for(;it1 != ite1; it1++)
-			{
-				if (it2 == ite2)
-					return false;
-				if (*it1 != *it2)
-					return (*it1 < *it2);
-				else
-					it2++;
-			}
-			if (it2 != ite2)
-				return true;
-			return false;
+			return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 		};
 
 		template <class T, class Alloc>
 		bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 		{
-			return (lhs < rhs || lhs == rhs);
+			return !(rhs < lhs);
 		};
 
 		template <class T, class Alloc>
 		bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 		{
-			return !(lhs < rhs || lhs == rhs);
+			return rhs < lhs;
 		};
 
 
