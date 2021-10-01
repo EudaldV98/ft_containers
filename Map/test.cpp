@@ -139,6 +139,11 @@ int main ()
 		std::cout << "Map1 size: " << map.size() << " Map2 size: " << map2.size() << std::endl;
 		map.swap(map2);
 		std::cout << "After swap:\n" << "Map1 size: " << map.size() << " Map2 size: " << map2.size() << std::endl << std::endl;
+		std::cout << "Print data in map via iterator:" << std::endl;
+		for (ft::map<char, int>::iterator it = map.begin(); it != map.end(); it++)
+		{
+			std::cout << "[" << it->first << "] = " << it->second << std::endl;
+		}
 
 		init_map(map);
 		map.erase('a');

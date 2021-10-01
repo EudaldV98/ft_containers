@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/27 18:20:46 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/10/01 12:20:25 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,6 +312,14 @@ namespace ft
 				}
 			}
 
+			template <class C>
+			void _swap(C &x, C &y)
+			{
+				C z = x;
+				x = y;
+				y = z;
+			}
+
 		public:
 
 			//CONSTRUCTORS
@@ -572,11 +580,7 @@ namespace ft
 
 			void swap(map &x)
 			{
-				map tmp;
-
-				tmp.copy_tree(x);
-				x.copy_tree(*this);
-				this->copy_tree(tmp);
+				this->_swap(*this, x);
 			}
 
 			void clear()
@@ -668,7 +672,7 @@ namespace ft
 
 				while (tmp != NULL && tmp != _fake_begin && tmp != _fake_end)
 				{
-					if (tmp->value->first < k)
+					if (!_comp(tmp->value->first, k))
 					{
 						res = tmp;
 						tmp = tmp->left;
@@ -686,7 +690,7 @@ namespace ft
 
 				while (tmp != NULL && tmp != _fake_begin && tmp != _fake_end)
 				{
-					if (tmp->value->first < k)
+					if (!_comp(tmp->value->first, k))
 					{
 						res = tmp;
 						tmp = tmp->left;
@@ -704,7 +708,7 @@ namespace ft
 
 				while (tmp != NULL && tmp != _fake_begin && tmp != _fake_end)
 				{
-					if (tmp->value->first > k)
+					if (_comp(tmp->value->first, k))
 					{
 						res = tmp;
 						tmp = tmp->left;
@@ -722,7 +726,7 @@ namespace ft
 
 				while (tmp != NULL && tmp != _fake_begin && tmp != _fake_end)
 				{
-					if (tmp->value->first > k)
+					if (_comp(tmp->value->first, k))
 					{
 						res = tmp;
 						tmp = tmp->left;
