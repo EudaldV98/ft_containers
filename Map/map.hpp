@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/10/01 18:28:19 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/10/01 20:39:53 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,6 @@ namespace ft
 					_alloc.deallocate(leaf->value, 1);
 					_node_alloc.destroy(leaf);
 					_node_alloc.deallocate(leaf, 1);
-					//leaf = NULL;
 					_map = NULL;
 					_node_alloc.destroy(_fake_end);
 					_node_alloc.deallocate(_fake_end, 1);
