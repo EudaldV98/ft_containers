@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/10/01 15:03:10 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/10/01 18:28:19 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -495,9 +495,6 @@ namespace ft
 					{
 						if (val.first == tmp->value->first)
 						{
-							// value_type *value = _alloc.allocate(1);
-							// _alloc.construct(value, val);
-							// _node_alloc.construct(new_node, value);
 							return (ft::make_pair(iterator(tmp), false));
 						}
 						if (val.first < tmp->value->first)
@@ -511,7 +508,7 @@ namespace ft
 								new_node->parent = tmp;
 								set_lower();
 								_size++;
-								break ;
+								return (ft::make_pair(find(new_node->value->first), true));
 							}
 							tmp = tmp->left;
 						}
@@ -531,13 +528,13 @@ namespace ft
 									new_node->right = _fake_end;
 								}
 								_size++;
-								break ;
+								return (ft::make_pair(find(new_node->value->first), true));
 							}
 							tmp = tmp->right;
 						}
 					}
 				}
-				return (ft::make_pair(find(new_node->value->first), false));
+				return (ft::make_pair(this->end(), false));
 			}
 
 			iterator				insert(iterator position, const value_type &val)
@@ -638,30 +635,59 @@ namespace ft
 			//MAP_OPERATIONS
 			iterator find(const key_type &k)
 			{
-				iterator it = this->begin();
-				iterator it_end = this->end();
+				node_type *tmp = _map;
+				// iterator	it = end();
 
-				while (it != it_end)
+				// if (_size > 1)
+				// {
+				// 	it--;
+				// 	if (!_comp(_upper->value->first, k))
+				// 	{
+				// 		tmp = _upper;
+				// 		return (iterator(tmp));
+				// 	}
+				// 	if (!_comp(k, _lower->value->first))
+				// 		return (iterator(_lower));
+				// }
+				while (tmp)
 				{
-					if (!_comp((*it).first, k) && !_comp(k, (*it).first))
-						break ;
-					it++;
+					if (tmp == NULL || tmp == _fake_end || tmp == _fake_begin)
+						return (iterator(_fake_end));
+					if (_comp(k, tmp->value->first))
+						tmp = tmp->left;
+					else if (_comp(tmp->value->first, k))
+						tmp = tmp->right;
+					else
+						return (iterator(tmp));
 				}
-				return it;
+				return (iterator(_fake_end));
 			}
 
 			const_iterator find(const key_type &k) const
 			{
-				const_iterator it = begin();
-				const_iterator it_end = end();
+				node_type *tmp = _map;
+				// const_iterator	it = end();
 
-				while (it != it_end)
+				// if (_size > 1)
+				// {
+				// 	it--;
+				// 	if (!_comp(_upper->value->first, k))
+				// 		return (const_iterator(_upper));
+				// 	if (!_comp(k, _lower->value->first))
+				// 		return (const_iterator(_lower));
+				// }
+				while (tmp)
 				{
-					if (!_comp((*it)->first, k) && !_comp(k, (*it)->first))
-						break ;
-					it++;
+					if (tmp == NULL || tmp == _fake_end || tmp == _fake_begin)
+						return (const_iterator(_fake_end));
+					if (_comp(k, tmp->value->first))
+						tmp = tmp->left;
+					else if (_comp(tmp->value->first, k))
+						tmp = tmp->right;
+					else
+						return (const_iterator(tmp));
 				}
-				return it;
+				return (const_iterator(_fake_end));
 			}
 
 			size_type count(const key_type &k) const
