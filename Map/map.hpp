@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/10/01 14:18:13 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/10/01 14:55:41 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -348,13 +348,17 @@ namespace ft
 				insert(first, last);
 			}
 
-			map &operator=(map const &m)
+			map &operator=(const map &m)
 			{
-				if (_size > 0)
-					clear();
-				if (m.size() > 0)
-					this->insert(m.begin(), m.end());
-				return	*this;
+				clear();
+				const_iterator it = m.begin();
+				const_iterator ite = m.end();
+				while (it != ite)
+				{
+					insert(*it);
+					++it;
+				}
+				return *this;
 			}
 
 			map(const map &x)
@@ -371,13 +375,21 @@ namespace ft
 				_lower = _fake_begin;
 				_upper = _fake_end;
 
-				*this = x;
+				const_iterator it = x.begin();
+				const_iterator ite = x.end();
+				while (it != ite)
+				{
+					insert(*it);
+					++it;
+				}
 			}
 
 			virtual	~map()
 			{
 				if (empty() == 0)
 					clear();
+				_node_alloc.destroy(_fake_begin);
+				_node_alloc.deallocate(_fake_begin, 1);
 			}
 
 			//ITERATORS

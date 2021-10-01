@@ -50,7 +50,7 @@ namespace ft
 			{
 				_ptr = src._ptr;
 			}
-
+			
 			virtual	~iterator_m()
 			{
 			}
