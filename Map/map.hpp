@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/10/01 14:55:41 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/10/01 15:03:10 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -638,8 +638,8 @@ namespace ft
 			//MAP_OPERATIONS
 			iterator find(const key_type &k)
 			{
-				iterator it = begin();
-				iterator it_end = end();
+				iterator it = this->begin();
+				iterator it_end = this->end();
 
 				while (it != it_end)
 				{
@@ -666,20 +666,7 @@ namespace ft
 
 			size_type count(const key_type &k) const
 			{
-				size_t ret = 0;
-				const_iterator it = begin();
-				const_iterator it_end = end();
-
-				while (it != it_end)
-				{
-					if (!_comp((*it).first, k) && !_comp(k, (*it).first))
-					{
-						ret++;
-						break ;						
-					}
-					it++;
-				}
-				return ret;
+				return (this->find(k) != this->end() ? 1 : 0);
 			}
 
 			iterator lower_bound(const key_type &k)
