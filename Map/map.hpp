@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/10/01 12:20:25 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/10/01 14:18:13 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -454,7 +454,6 @@ namespace ft
 			{
 				node_type *new_node = _node_alloc.allocate(1);
 
-				node_type *tmp = _map;
 				if (_size == 0)
 				{
 					value_type *value = _alloc.allocate(1);
@@ -474,6 +473,12 @@ namespace ft
 				}
 				else
 				{
+					node_type *tmp = _map;
+
+					if (_comp(val.first, _lower->value->first))
+						tmp = _lower;
+					else if (_comp(val.first, _upper->value->first))
+						tmp = _upper;
 					while(tmp)
 					{
 						if (val.first == tmp->value->first)
@@ -520,7 +525,7 @@ namespace ft
 						}
 					}
 				}
-				return (ft::make_pair(find(new_node->value->first), true));
+				return (ft::make_pair(find(new_node->value->first), false));
 			}
 
 			iterator				insert(iterator position, const value_type &val)
@@ -708,7 +713,7 @@ namespace ft
 
 				while (tmp != NULL && tmp != _fake_begin && tmp != _fake_end)
 				{
-					if (_comp(tmp->value->first, k))
+					if (_comp(k, tmp->value->first))
 					{
 						res = tmp;
 						tmp = tmp->left;
@@ -726,7 +731,7 @@ namespace ft
 
 				while (tmp != NULL && tmp != _fake_begin && tmp != _fake_end)
 				{
-					if (_comp(tmp->value->first, k))
+					if (_comp(k, tmp->value->first))
 					{
 						res = tmp;
 						tmp = tmp->left;
