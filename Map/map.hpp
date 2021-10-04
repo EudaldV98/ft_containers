@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/10/01 20:39:53 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/10/04 12:31:43 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,20 +127,6 @@ namespace ft
 			nodeAlloc			_node_alloc;
 			key_compare			_comp;
 
-			void	copy_tree(map &m)
-			{
-				this->clear();
-				node_type	*tmp = _map;
-
-				_map = m._map;
-				_size = m._size;
-				_alloc = m._alloc;
-				_comp = m._comp;
-				m._map = tmp;
-				m._size = 0;
-				tmp = NULL;
-			}
-
 			node_type		*find_node(key_type key)
 			{
 				node_type	*tmp = _map;
@@ -192,6 +178,10 @@ namespace ft
 				{
 					leaf->parent->right = NULL;
 				}
+				if (leaf == _lower)
+					_lower = leaf->parent;
+				if (leaf == _upper)
+					_upper = leaf->parent;
 				_alloc.destroy(leaf->value);
 				_alloc.deallocate(leaf->value, 1);
 				_node_alloc.destroy(leaf);
@@ -220,6 +210,10 @@ namespace ft
 					if (node == node->parent->left)
 						node->parent->left = replace;
 				}
+				if (node == _upper)
+					_upper = node->parent;
+				if (node == _lower)
+					_lower = node->parent;
 				replace->parent = node->parent;
 				_alloc.destroy(node->value);
 				_alloc.deallocate(node->value, 1);
@@ -275,8 +269,6 @@ namespace ft
 				_alloc.deallocate(node->value, 1);
 				_node_alloc.destroy(node);
 				_node_alloc.deallocate(node, 1);
-				set_upper();
-				set_lower();
 				_size--;
 			}
 
@@ -284,6 +276,8 @@ namespace ft
 			{
 				node_type *node = _map;
 
+				 if (_upper)
+					node = _upper;
 				while (node->right && node->right != _fake_end)
 					node = node->right;
 				_upper = node;
@@ -298,6 +292,9 @@ namespace ft
 			void	set_lower()
 			{
 				node_type *node = _map;
+
+				if (_lower)
+					node = _lower;
 				while (node->left && node->left != _fake_begin)
 					node = node->left;
 
@@ -488,15 +485,15 @@ namespace ft
 
 					if (_comp(val.first, _lower->value->first))
 						tmp = _lower;
-					else if (_comp(val.first, _upper->value->first))
+					else if (_comp(_upper->value->first, val.first))
 						tmp = _upper;
-					while(tmp)
+					while(true)
 					{
 						if (val.first == tmp->value->first)
 						{
 							return (ft::make_pair(iterator(tmp), false));
 						}
-						if (val.first < tmp->value->first)
+						if (_comp(val.first, tmp->value->first))
 						{
 							if (tmp->left == NULL || tmp->left == _fake_begin)
 							{
@@ -505,13 +502,14 @@ namespace ft
 								_node_alloc.construct(new_node, value);
 								tmp->left = new_node;
 								new_node->parent = tmp;
-								set_lower();
+								if (_comp(val.first, _lower->value->first))
+									set_lower();
 								_size++;
-								return (ft::make_pair(find(new_node->value->first), true));
+								return (ft::make_pair(iterator(tmp->left), true));
 							}
 							tmp = tmp->left;
 						}
-						else
+						else if (_comp(tmp->value->first, val.first))
 						{
 							if (tmp->right == NULL || tmp->right == _fake_end)
 							{
@@ -520,25 +518,25 @@ namespace ft
 								_node_alloc.construct(new_node, value);
 								tmp->right = new_node;
 								new_node->parent = tmp;
-								if (new_node->value->first > _upper->value->first)
-								{
-									_upper = new_node;
-									_fake_end->parent = new_node;
-									new_node->right = _fake_end;
-								}
+								if (_comp(_upper->value->first, val.first))
+									set_upper();
 								_size++;
-								return (ft::make_pair(find(new_node->value->first), true));
+								return (ft::make_pair(iterator(tmp->right), true));
 							}
 							tmp = tmp->right;
 						}
+						else
+						{
+							return (ft::make_pair(iterator(tmp), false));	
+						}
 					}
 				}
-				return (ft::make_pair(this->end(), false));
 			}
 
 			iterator				insert(iterator position, const value_type &val)
 			{
 				(void)position;
+				
 				return	insert(val).first;
 			}
 

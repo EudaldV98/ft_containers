@@ -62,6 +62,11 @@ int main ()
 		for (int i = 0; i < 3; i++)
 		{
 			map2.insert(it2, *it);
+			// std::cout << "\nInsertion: " << it->first << std::endl;
+			// for (ft::map<char, int>::iterator iter = map2.begin(); iter != map2.end(); iter++)
+			// {
+			// 	std::cout << "[" << iter->first << "] = " << iter->second << std::endl;
+			// }
 			it++;
 			it2 = map2.begin();
 			it2++;
@@ -76,7 +81,9 @@ int main ()
 
 	{
 		std::cout << "Erase begin() and last member of map being: " << map.begin()->first << " and " << map.rbegin()->first << std::endl;
+		std::cout << "Begin :\n";
 		map.erase(map.begin());
+		std::cout << "End-- :\n";
 		map.erase(--(map.end()));
 		std::cout << "Print data in map via iterator:" << std::endl;
 		for (ft::map<char, int>::iterator it = map.begin(); it != map.end(); it++)
@@ -98,7 +105,6 @@ int main ()
 		{
 			std::cout << "[" << it->first << "] = " << it->second << std::endl;
 		}
-		// return 0;
 	}
 
 	{
@@ -254,6 +260,37 @@ int main ()
 		std::cout << "The allocated array has a size of " << sizeof(ft::map<char,int>::value_type)*5 << " bytes.\n";
 
 		map.get_allocator().deallocate(p,5);
+	}
+
+	{
+		ft::map<char, int>	test;
+
+		test['m'] = 1;
+		test['g'] = 1;
+		test['i'] = 1;
+		test['e'] = 1;
+		test['f'] = 1;
+		test['c'] = 1;
+
+//			m
+//		   /
+//		  g
+//		 /  |
+//		e    i
+//     /  |
+//    c    f
+
+		test.erase('g');
+		test.erase('c');
+		for (ft::map<char,int>::iterator it = test.begin(); it != test.end(); ++it)
+			std::cout << it->first << "/" << it->second << " ";
+		std::cout << std::endl;
+
+		test['b'] = 1;
+
+		for (ft::map<char,int>::iterator it = test.begin(); it != test.end(); ++it)
+			std::cout << it->first << "/" << it->second << " ";
+		std::cout << std::endl;
 	}
 	return 0;
 }
