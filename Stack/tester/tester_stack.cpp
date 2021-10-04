@@ -6,13 +6,13 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 16:12:08 by jereligi          #+#    #+#             */
-/*   Updated: 2021/08/01 12:52:56 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/10/04 14:49:18 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <stack>
-#include "stack.hpp"
+#include "../stack.hpp"
 
 #define COLOR_RESET		"\033[0m"
 #define COLOR_RED		"\033[1;31m"

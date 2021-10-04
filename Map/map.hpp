@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/10/04 12:31:43 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/10/04 14:38:24 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,7 +193,7 @@ namespace ft
 
 			void		erase_single(node_type *node)
 			{
-				node_type *replace;
+				node_type *replace = NULL;
 			
 				if (node->right && node->right != _fake_end)
 					replace = node->right;
@@ -633,19 +633,6 @@ namespace ft
 			iterator find(const key_type &k)
 			{
 				node_type *tmp = _map;
-				// iterator	it = end();
-
-				// if (_size > 1)
-				// {
-				// 	it--;
-				// 	if (!_comp(_upper->value->first, k))
-				// 	{
-				// 		tmp = _upper;
-				// 		return (iterator(tmp));
-				// 	}
-				// 	if (!_comp(k, _lower->value->first))
-				// 		return (iterator(_lower));
-				// }
 				while (tmp)
 				{
 					if (tmp == NULL || tmp == _fake_end || tmp == _fake_begin)
@@ -663,16 +650,6 @@ namespace ft
 			const_iterator find(const key_type &k) const
 			{
 				node_type *tmp = _map;
-				// const_iterator	it = end();
-
-				// if (_size > 1)
-				// {
-				// 	it--;
-				// 	if (!_comp(_upper->value->first, k))
-				// 		return (const_iterator(_upper));
-				// 	if (!_comp(k, _lower->value->first))
-				// 		return (const_iterator(_lower));
-				// }
 				while (tmp)
 				{
 					if (tmp == NULL || tmp == _fake_end || tmp == _fake_begin)

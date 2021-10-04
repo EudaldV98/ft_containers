@@ -1,4 +1,4 @@
-#include "stack.hpp"
+#include "../stack.hpp"
 #include "../../Vector/vector.hpp"
 
 int		main(void)
@@ -24,7 +24,7 @@ int		main(void)
      std::cout << ' ' << s.top();
      s.pop();
   	}
-
+	std::cout << std::endl;
 
 	return (0);
 }

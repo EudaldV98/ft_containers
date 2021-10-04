@@ -6,13 +6,13 @@
 #    By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/03 14:12:12 by jereligi          #+#    #+#              #
-#    Updated: 2021/09/23 14:48:21 by jvaquer          ###   ########.fr        #
+#    Updated: 2021/10/04 14:55:21 by jvaquer          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = tester_map
 
-SRC = 	./tester.cpp	
+SRC = 	./tester/tester_map.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
@@ -20,13 +20,10 @@ CC = clang++
 
 CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 
-all : $(NAME)
+all : test_map
 
-$(NAME) :	$(OBJ)
+test_map :	$(OBJ)
 			$(CC) $(CFLAGS) -o $(NAME) $(OBJ)
-
-sanitize : 	$(OBJ)
-			$(CC) -o $(NAME) -fsanitize=address $(CPPFLAGS) $(OBJ)
 
 clean :
 			rm -rf $(OBJ)

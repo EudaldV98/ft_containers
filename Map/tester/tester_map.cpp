@@ -4,7 +4,7 @@
 	#include <map>
 	namespace ft = std;
 #else
-	#include "map.hpp"
+	#include "../map.hpp"
 #endif
 
 void init_map(ft::map<char, int> &m)

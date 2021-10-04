@@ -6,7 +6,7 @@
 #    By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/09 21:09:38 by jvaquer           #+#    #+#              #
-#    Updated: 2021/09/20 18:22:08 by jvaquer          ###   ########.fr        #
+#    Updated: 2021/10/04 14:42:32 by jvaquer          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,9 +24,6 @@ all : $(NAME)
 
 $(NAME) :	$(OBJ)
 			$(CXX) $(CFLAGS) -o $(NAME) $(OBJ)
-
-sanitize : 	$(OBJ)
-			$(CXX) -o $(NAME) -fsanitize=address $(CPPFLAGS) $(OBJ)
 
 clean :
 			rm -rf $(OBJ)

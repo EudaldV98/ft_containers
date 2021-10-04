@@ -5,25 +5,25 @@
 #                                                     +:+ +:+         +:+      #
 #    By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/08/01 11:50:26 by jvaquer           #+#    #+#              #
-#    Updated: 2021/10/04 14:48:30 by jvaquer          ###   ########.fr        #
+#    Created: 2021/10/04 14:42:45 by jvaquer           #+#    #+#              #
+#    Updated: 2021/10/04 14:43:46 by jvaquer          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = tester_stack
+NAME = tester_subject
 
-SRC = 	./tester/tester_stack.cpp	
+SRC = 	./main.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
-CC = clang++
+CXX = clang++
 
-CPPFLAGS = -Wall -Wextra -Werror -std=c++98
+CPPFLAGS = -Wall -Werror -Wextra -std=c++98
 
 all : $(NAME)
 
 $(NAME) :	$(OBJ)
-			$(CC) $(CFLAGS) -o $(NAME) $(OBJ)
+			$(CXX) $(CFLAGS) -o $(NAME) $(OBJ)
 
 clean :
 			rm -rf $(OBJ)
