@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/10/04 14:38:24 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/10/04 15:25:53 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,70 +19,6 @@
 # include	"./iterators/const_iterator_m.hpp"
 # include	"./iterators/reverse_iterator_m.hpp"
 # include	"./iterators/const_reverse_iterator_m.hpp"
-
-
-template <class T>
-struct node
-{
-	public:
-
-		typedef T 	value_type;
-
-		node		*parent;
-		node		*left;
-		node		*right;
-		value_type	*value;
-
-		node(void)
-		{
-			parent = NULL;
-			left = NULL;
-			right = NULL;
-			value = NULL;
-		}
-
-		node(value_type *val)
-		{
-			value = val;
-			parent = NULL;
-			left = NULL;
-			right = NULL;
-		}
-};
-
-template <typename T>
-node<T>	*get_left(node<T> *node)
-{
-	return	node->left;
-}
-
-template <typename T>
-node<T>	*get_right(node<T> *node)
-{
-	return	node->right;
-}
-
-template <typename T>
-node<T>	*get_parent(node<T> *node)
-{
-	return	node->parent;
-}
-
-template <typename T>
-node<T>	*last_right(node<T> *node)
-{
-	while (node->right != NULL)
-		node = node->right;
-	return	node;
-}
-
-template <typename T>
-node<T>	*last_left(node<T> *node)
-{
-	while (node->left != NULL)
-		node = node->left;
-	return	node;
-}
 
 namespace ft
 {

@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/08 10:00:25 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/09/24 15:08:41 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/10/04 15:24:52 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,37 @@
 
 namespace ft
 {
+	//-------- NODE -----------
+
+	template <class T>
+	struct node
+	{
+		public:
+
+			typedef T 	value_type;
+
+			node		*parent;
+			node		*left;
+			node		*right;
+			value_type	*value;
+
+			node(void)
+			{
+				parent = NULL;
+				left = NULL;
+				right = NULL;
+				value = NULL;
+			}
+
+			node(value_type *val)
+			{
+				value = val;
+				parent = NULL;
+				left = NULL;
+				right = NULL;
+			}
+	};
+
 	//-------- LEXICO -----------
 
 	template <class InputIt, class InputIt2>
