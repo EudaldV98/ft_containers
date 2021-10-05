@@ -1,9 +1,9 @@
-#include "./vector.hpp"
+#include "../vector.hpp"
 #include <vector>
 #include <iostream>
 
 #ifndef MODE
-# define MODE ft
+# define MODE std
 #endif
 
 // a predicate implemented as a function:

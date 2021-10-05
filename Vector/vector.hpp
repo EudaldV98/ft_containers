@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/29 12:36:35 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/10/01 09:58:47 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/10/05 14:42:22 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -408,7 +408,7 @@ namespace ft
 		};
 		
 		template <class T, class Alloc>
-		bool operator== (const vector<T, Alloc> & lhs, const vector<T, Alloc> & rhs)
+		bool operator==(const vector<T, Alloc> & lhs, const vector<T, Alloc> & rhs)
 		{
 			if (lhs.size() != rhs.size())
 				return false;
@@ -433,26 +433,26 @@ namespace ft
 		};
 
 		template <class T, class Alloc>
-		bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+		bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 		{
 			return !(rhs < lhs);
 		};
 
 		template <class T, class Alloc>
-		bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+		bool operator>(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 		{
 			return rhs < lhs;
 		};
 
 
 		template <class T, class Alloc>
-		bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+		bool operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 		{
 			return !(lhs < rhs);
 		};
 
 		template <class T, class Alloc>
-		void		swap(vector<T,Alloc>& x, vector<T,Alloc>& y)
+		void swap(vector<T,Alloc>& x, vector<T,Alloc>& y)
 		{
 			x.swap(y);
 		}

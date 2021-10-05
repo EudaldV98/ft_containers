@@ -6,7 +6,7 @@
 #    By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/08/01 11:50:26 by jvaquer           #+#    #+#              #
-#    Updated: 2021/10/04 14:48:30 by jvaquer          ###   ########.fr        #
+#    Updated: 2021/10/05 15:52:22 by jvaquer          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 all : $(NAME)
 
 $(NAME) :	$(OBJ)
-			$(CC) $(CFLAGS) -o $(NAME) $(OBJ)
+			$(CC) $(CPPFLAGS) -o $(NAME) $(OBJ)
 
 clean :
 			rm -rf $(OBJ)

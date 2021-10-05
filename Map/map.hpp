@@ -6,7 +6,7 @@
 /*   By: jvaquer <jvaquer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 12:50:16 by jvaquer           #+#    #+#             */
-/*   Updated: 2021/10/04 15:25:53 by jvaquer          ###   ########.fr       */
+/*   Updated: 2021/10/05 15:23:43 by jvaquer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -623,7 +623,7 @@ namespace ft
 				return iterator(res);
 			}
 
-			iterator lower_bound(const key_type &k) const
+			const_iterator lower_bound(const key_type &k) const
 			{
 				node_type *tmp = _map;
 				node_type *res = this->end()._ptr;
@@ -638,7 +638,7 @@ namespace ft
 					else
 						tmp = tmp->right;
 				}
-				return iterator(res);
+				return const_iterator(res);
 			}
 
 			iterator upper_bound(const key_type &k)
@@ -659,7 +659,7 @@ namespace ft
 				return iterator(res);
 			}
 
-			iterator upper_bound(const key_type &k) const
+			const_iterator upper_bound(const key_type &k) const
 			{
 				node_type *tmp = _map;
 				node_type *res = this->end()._ptr;
@@ -674,7 +674,7 @@ namespace ft
 					else
 						tmp = tmp->right;
 				}
-				return iterator(res);
+				return const_iterator(res);
 			}
 
 			pair<iterator, iterator> equal_range(const key_type &k)
@@ -701,6 +701,68 @@ namespace ft
 				return	_alloc;
 			}
 	};
+
+	template <class Key, class T, class Compare>
+	bool operator==(const map<Key, T, Compare> &lhs, const map<Key, T, Compare> &rhs)
+	{
+		if (lhs.size() != rhs.size())
+			return false;
+		for (typename map<Key, T, Compare>::const_iterator it_l = lhs.begin(), it_r = rhs.begin();
+				it_l != lhs.end(); it_l++, it_r++)
+		{
+			if (*it_l != *it_r)
+				return false;
+		}
+		return true;
+	}
+
+	template <class Key, class T, class Compare>
+	bool operator!=(const map<Key, T, Compare> &lhs, const map<Key, T, Compare> &rhs)
+	{
+		return !(lhs == rhs);
+	}
+
+	template <class Key, class T, class Compare>
+	bool operator<(const map<Key, T, Compare> &lhs, const map<Key, T, Compare> &rhs)
+	{
+		for (typename map<Key, T, Compare>::const_iterator it_l = lhs.begin(), it_r = rhs.begin();
+				it_l != lhs.end(); it_l++, it_r++)
+		{
+			if (*it_l >= *it_r)
+				return false;
+		}
+		return true;
+	}
+
+	template <class Key, class T, class Compare>
+	bool operator<=(const map<Key, T, Compare> &lhs, const map<Key, T, Compare> &rhs)
+	{
+		if (lhs == rhs)
+			return true;
+		return lhs < rhs;	
+	}
+
+	template <class Key, class T, class Compare>
+	bool operator>(const map<Key, T, Compare> &lhs, const map<Key, T, Compare> &rhs)
+	{
+		if (lhs == rhs)
+			return false;
+		return !(lhs < rhs);
+	}
+
+	template <class Key, class T, class Compare>
+	bool operator>=(const map<Key, T, Compare> &lhs, const map<Key, T, Compare> &rhs)
+	{
+		if (lhs == rhs)
+			return true;
+		return !(lhs < rhs);
+	}
+
+	template <class Key, class T, class Compare>
+	void swap(const map<Key, T, Compare> &x, const map<Key, T, Compare>y)
+	{
+		x.swap(y);
+	}
 }
 
 #endif
